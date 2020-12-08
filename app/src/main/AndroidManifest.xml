@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.androidchess">
+
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <uses-feature android:name="android.hardware.type.watch" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.AndroidChess">
+        <activity
+            android:name=".ReplayGame"
+            android:label="@string/title_activity_replay_game"
+            android:theme="@style/Theme.AndroidChess.NoActionBar"></activity>
+        <activity
+            android:name=".SaveFinishedGame"
+            android:label="@string/title_activity_save_finished_game"
+            android:theme="@style/Theme.AndroidChess.NoActionBar" />
+        <activity
+            android:name=".SaveNewGame"
+            android:label="@string/title_activity_save_new_game"
+            android:theme="@style/Theme.AndroidChess.NoActionBar" />
+        <activity
+            android:name=".ReplayEditGame"
+            android:label="@string/title_activity_watch_edit_game"
+            android:theme="@style/Theme.AndroidChess.NoActionBar" />
+        <activity
+            android:name=".PreviousGames"
+            android:label="@string/title_activity_previous_games"
+            android:theme="@style/Theme.AndroidChess.NoActionBar" />
+        <activity
+            android:name=".PlayEditGame"
+            android:label="@string/title_activity_edit_game"
+            android:theme="@style/Theme.AndroidChess.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.androidchess.CurrentGames" />
+        </activity>
+
+        <uses-library
+            android:name="com.google.android.wearable"
+            android:required="false" />
+        <!--
+               Set to true if your app is Standalone, that is, it does not require the handheld
+               app to run.
+        -->
+        <meta-data
+            android:name="com.google.android.wearable.standalone"
+            android:value="false" />
+
+        <activity
+            android:name=".CurrentGames"
+            android:label="@string/title_activity_current_games">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.androidchess.Home" />
+        </activity>
+        <activity
+            android:name=".Chess"
+            android:label="@string/title_activity_chess"
+            android:theme="@style/Theme.AndroidChess.NoActionBar" />
+        <activity android:name=".Home">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

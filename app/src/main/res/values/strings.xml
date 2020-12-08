@@ -1,0 +1,48 @@
+<resources>
+
+    <!-- Home screen -->
+    <string name="app_name">AndroidChess</string>
+    <string name="chess_label">Chess</string>
+    <string name="new_game_label">New Game</string>
+    <string name="cont_game_label">Continue Game</string>
+    <string name="prev_games_label">Previous Games</string>
+    <string-array name="continue_game_list">
+        <item>Game 1</item>
+        <item>Game 2</item>
+        <item>Game 3</item>
+        <item>Game 4</item>
+        <item>Game 5</item>
+    </string-array>
+
+    <string name="title_activity_chess">Chess</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="title_activity_current_games">CurrentGames</string>
+
+    <!-- Edit game screen -->
+    <string name="title_activity_edit_game">EditGame</string>
+    <string name="play_label">Play</string>
+    <string name="rename_label">Rename</string>
+    <string name="rename_hint">Enter new name</string>
+    <string name="delete_label">Delete</string>
+    <string name="ok_label">Ok</string>
+    <string name="title_activity_game">Game</string>
+    <string name="quit_label">Quit</string>
+    <string name="title_activity_previous_games">PreviousGames</string>
+    <string name="title_activity_watch_edit_game">WatchEditGame</string>
+    <string name="watch_label">Watch</string>
+    <string name="resign_label">Resign</string>
+    <string name="title_activity_save_new_game">SaveNewGame</string>
+    <string name="name_hint">Enter name</string>
+    <string name="nvm_label">Never mind</string>
+    <string name="title_activity_save_finished_game">SaveFinishedGame</string>
+    <string name="title_activity_replay_game">ReplayGame</string>
+    <string name="prev_move_label">Previous move</string>
+    <string name="next_move_label">Next move</string>
+</resources>
