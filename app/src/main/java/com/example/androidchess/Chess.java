@@ -1,11 +1,13 @@
 package com.example.androidchess;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.Gson;
@@ -51,7 +53,9 @@ class Game implements Serializable {
 
 public class Chess extends AppCompatActivity {
 
+    //If game is in progress/won/draw
     private int GAME_STATUS = 0;
+
     private Game game;
 
     TextView playersMove, gameValue;
@@ -99,35 +103,55 @@ public class Chess extends AppCompatActivity {
     }
 
     /**
-     * Quit game. Prompt user to save game
+     * Quit game. Launches AlertDialog popup asking whether or not to save game
      */
-    public void quit(){
-        int saveGame = 0;
-
-        //Do save game
-        if(saveGame == 1){
-            //game is already in current games list
-            if(game.isSaved){
-                CurrentGames.updateGame(game);
+    private void quit() {
+        AlertDialog.Builder builder = new AlertDialog.Builder();
+        builder.setTitle("Would you like to save this game?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();;
+                saveGame();
+                returnToHome();
             }
-
-            //save new game
-            else{
-                //Add game to bundle
-                Intent intent = new Intent(this, Game.class);
-                intent.putExtra(Home.GAME, new Gson().toJson(game));
-                startActivity(intent);
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+                returnToHome();
             }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 
-            Home.saveState();
+    /**
+     * Called by quit() if user saves game
+     */
+    private void saveGame(){
+        if(game.isSaved){
+            CurrentGames.updateGame(game);
+        }
 
-            //Clear back stack
-            Intent intent = new Intent(this, Home.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        //save new game
+        else{
+            //Add game to bundle
+            Intent intent = new Intent(this, Game.class);
+            intent.putExtra(Home.GAME, new Gson().toJson(game));
             startActivity(intent);
         }
 
+        Home.saveState();
+    }
 
+    /**
+     * Brings user back to home screen
+     */
+    private void returnToHome(){
+        //Clear back stack (?)
+        Intent intent = new Intent(this, Home.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
     /**
