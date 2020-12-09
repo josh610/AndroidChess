@@ -55,7 +55,7 @@ public class Chess extends AppCompatActivity {
     private Game game;
 
     TextView playersMove, gameValue;
-    Button incr, resign, quit;
+    Button increment, resign, quit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +63,8 @@ public class Chess extends AppCompatActivity {
         setContentView(R.layout.activity_chess);
 
         playersMove = findViewById(R.id.playersMove);
-        gameValue = findViewById(R.id.chessVal);
-        incr = findViewById(R.id.increment);
+        gameValue = findViewById(R.id.gameValue);
+        increment = findViewById(R.id.increment);
         resign = findViewById(R.id.resign);
         quit = findViewById(R.id.quit);
 
@@ -75,7 +75,7 @@ public class Chess extends AppCompatActivity {
         }
         game = new Gson().fromJson(jsonGames, Game.class);
 
-        incr.setOnClickListener(new View.OnClickListener() {
+        increment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 game.value++;
