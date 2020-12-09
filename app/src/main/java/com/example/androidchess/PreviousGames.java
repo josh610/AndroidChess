@@ -3,6 +3,7 @@ package com.example.androidchess;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -56,6 +57,12 @@ public class PreviousGames extends AppCompatActivity{
             jsonGames = extras.getString("current_games");
         }
         games = new Gson().fromJson(jsonGames, ArrayList.class);
+
+        listView = (ListView) findViewById(R.id.previous_games_list);
+        listView.setAdapter(new ArrayAdapter<Game>(this, R.layout.game, games));
+
+        // show game for possible edit when tapped
+        listView.setOnItemClickListener((p, V, pos, id) -> editGame(pos));
     }
 
     /**
@@ -68,7 +75,7 @@ public class PreviousGames extends AppCompatActivity{
         Game game = games.get(pos);
         bundle.putInt(PlayEditGame.GAME_INDEX, pos);
         bundle.putString(PlayEditGame.GAME_NAME, game.getName());
-        Intent intent = new Intent(this, PlayEditGame.class);
+        Intent intent = new Intent(this, ReplayEditGame.class);
         intent.putExtras(bundle);
         startActivityForResult(intent, RENAME_GAME_CODE);
     }

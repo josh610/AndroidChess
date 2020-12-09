@@ -14,9 +14,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidChess">
         <activity
+            android:name=".WatchEditGame"
+            android:label="@string/title_activity_watch_edit_game"
+            android:theme="@style/Theme.AndroidChess.NoActionBar"></activity>
+        <activity
             android:name=".ReplayGame"
             android:label="@string/title_activity_replay_game"
-            android:theme="@style/Theme.AndroidChess.NoActionBar"></activity>
+            android:theme="@style/Theme.AndroidChess.NoActionBar" />
         <activity
             android:name=".SaveFinishedGame"
             android:label="@string/title_activity_save_finished_game"
@@ -67,6 +71,7 @@
         <activity android:name=".Home">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

@@ -7,7 +7,7 @@
     <activity
         android:id="@+id/currentGames"
         android:name="com.example.androidchess.CurrentGames"
-        android:label="CurrentGames" >
+        android:label="CurrentGames">
         <action
             android:id="@+id/action_currentGames_to_playEditGame"
             app:destination="@id/playEditGame" />
@@ -15,7 +15,7 @@
     <activity
         android:id="@+id/playEditGame"
         android:name="com.example.androidchess.PlayEditGame"
-        android:label="PlayEditGame" >
+        android:label="PlayEditGame">
         <action
             android:id="@+id/action_playEditGame_to_chess"
             app:destination="@id/chess" />
@@ -23,7 +23,7 @@
     <activity
         android:id="@+id/chess"
         android:name="com.example.androidchess.Chess"
-        android:label="Chess" >
+        android:label="Chess">
         <action
             android:id="@+id/action_chess_to_saveFinishedGame"
             app:destination="@id/saveFinishedGame" />
@@ -34,7 +34,7 @@
     <activity
         android:id="@+id/previousGames"
         android:name="com.example.androidchess.PreviousGames"
-        android:label="PreviousGames" >
+        android:label="PreviousGames">
         <action
             android:id="@+id/action_previousGames_to_replayEditGame"
             app:destination="@id/replayEditGame" />
@@ -42,7 +42,7 @@
     <activity
         android:id="@+id/replayEditGame"
         android:name="com.example.androidchess.ReplayEditGame"
-        android:label="ReplayEditGame" >
+        android:label="ReplayEditGame">
         <action
             android:id="@+id/action_replayEditGame_to_replayGame"
             app:destination="@id/replayGame" />
@@ -62,7 +62,7 @@
     <activity
         android:id="@+id/home"
         android:name="com.example.androidchess.Home"
-        android:label="Home" >
+        android:label="Home">
         <action
             android:id="@+id/action_home_to_currentGames"
             app:destination="@id/currentGames" />
@@ -70,4 +70,24 @@
             android:id="@+id/action_home_to_previousGames"
             app:destination="@id/previousGames" />
     </activity>
+    <fragment
+        android:id="@+id/FirstFragment"
+        android:name="com.example.androidchess.FirstFragment"
+        android:label="@string/first_fragment_label"
+        tools:layout="@layout/fragment_first">
+
+        <action
+            android:id="@+id/action_FirstFragment_to_SecondFragment"
+            app:destination="@id/SecondFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/SecondFragment"
+        android:name="com.example.androidchess.SecondFragment"
+        android:label="@string/second_fragment_label"
+        tools:layout="@layout/fragment_second">
+
+        <action
+            android:id="@+id/action_SecondFragment_to_FirstFragment"
+            app:destination="@id/FirstFragment" />
+    </fragment>
 </navigation>

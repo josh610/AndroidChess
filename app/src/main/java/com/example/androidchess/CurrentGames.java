@@ -111,7 +111,19 @@ public class CurrentGames extends AppCompatActivity{
     }
 
     /**
-     *
+     * Static method to be called by other classes to delete a saved game
+     * @param game
+     */
+    public static void deleteGame(Game game){
+        for(int i = 0; i<games.size(); i++){
+            if(games.get(i).equals(game)){
+                games.remove(i);
+            }
+        }
+    }
+
+    /**
+     * still trying to figure this out
      * @param requestCode
      * @param resultCode
      * @param intent

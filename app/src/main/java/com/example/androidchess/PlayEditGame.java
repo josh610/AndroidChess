@@ -1,13 +1,20 @@
 package com.example.androidchess;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
 import androidx.appcompat.widget.Toolbar;
+
+import com.google.gson.Gson;
 
 /**
  * Allows user to continue playing selected in-progress game,
@@ -19,6 +26,7 @@ public class PlayEditGame extends AppCompatActivity {
     public static final String GAME_INDEX = "gameIndex";
     public static final String GAME_NAME = "name";
 
+    private Game game;
     private int gameIndex;
     private EditText rename;
     private Button play, ok, delete;
@@ -35,6 +43,7 @@ public class PlayEditGame extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //get fields
+        play = findViewById(R.id.play);
         rename = findViewById(R.id.rename);
         ok = findViewById(R.id.ok);
         delete = findViewById(R.id.delete);
@@ -45,6 +54,18 @@ public class PlayEditGame extends AppCompatActivity {
             gameIndex = bundle.getInt(GAME_INDEX);
             rename.setText(bundle.getString(GAME_NAME));
         }
+
+        //read Game object from Json String
+        String jsonGames = "";
+        Bundle extras = getIntent().getExtras();
+        if(extras != null){
+            jsonGames = extras.getString("game");
+        }
+        game = new Gson().fromJson(jsonGames, Game.class);
+
+        play.setOnClickListener(v -> playGame());
+        ok.setOnClickListener(v -> saveName());
+        delete.setOnClickListener(v -> delete());
     }
 
     /**
@@ -52,7 +73,7 @@ public class PlayEditGame extends AppCompatActivity {
      * Not sure if this method corresponds to the up arrow or if I don't need it
      * @param v
      */
-    public void cancel(View v){
+    private void cancel(View v){
         setResult(RESULT_CANCELED);
         finish();
     }
@@ -60,30 +81,45 @@ public class PlayEditGame extends AppCompatActivity {
     /**
      * Continue playing selected game
      * Starts Game activity
-     * @param v
      */
-    public void playGame(View v){
-
+    private void playGame(){
+        Intent intent = new Intent(this, Chess.class);
+        intent.putExtra(Home.GAME, new Gson().toJson(game));
+        startActivity(intent);
     }
 
     /**
      * Rename selected game
-     * @param v
      */
-    public void saveName(View v){
-        //gather data from text field
-        String newName = rename.getText().toString();
+    private void saveName(){
+        try{
+            game.setName(rename.getText().toString());
+            game.isSaved = true;
+            CurrentGames.addGame(game);
 
-        if(newName == null || newName.length() == 0){
-
+            finish();
+        }
+        catch(Exception e){
+            Toast.makeText(PlayEditGame.this, "Please enter a valid name", Toast.LENGTH_LONG).show();
         }
     }
 
     /**
-     * Delete selected game
-     * @param v
+     * Called by delete button
      */
-    public void delete(View v){
+    private void delete(){
+        showDeleteDialog();
+    }
 
+    private void showDeleteDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext()); //I'm not sure if getApplicationContext() is the correct context here
+        builder.setTitle("Are you sure?");
+        builder.setPositiveButton("Yes", (dialog, id) -> {
+            dialog.dismiss();;
+            CurrentGames.deleteGame(game);
+        });
+        builder.setNegativeButton("No", (dialog, id) -> dialog.dismiss());
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

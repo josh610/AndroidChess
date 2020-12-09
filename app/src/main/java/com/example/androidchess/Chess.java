@@ -33,7 +33,7 @@ class Game implements Serializable {
     //This is just for testing purposes
     public int value = 0;
 
-    public String playerMove = "White's move";
+    private String playerMove = "White's move";
 
     public String getName(){
         return name;
@@ -41,6 +41,14 @@ class Game implements Serializable {
 
     public void setName(String name){
         this.name = name;
+    }
+
+    public String getPlayerMove(){
+        return playerMove;
+    }
+
+    public void setPlayerMove(String playerMove){
+        this.playerMove = playerMove;
     }
 }
 
@@ -52,9 +60,6 @@ class Game implements Serializable {
  */
 
 public class Chess extends AppCompatActivity {
-
-    //If game is in progress/won/draw
-    private int GAME_STATUS = 0;
 
     private Game game;
 
@@ -83,9 +88,9 @@ public class Chess extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 game.value++;
-                if(game.playerMove == "White's move") game.playerMove = "Black's move";
-                else game.playerMove = "White's move";
-                playersMove.setText(game.playerMove);
+                if(game.getPlayerMove().equals("White's move")) game.setPlayerMove("Black's move");
+                else game.setPlayerMove("White's move");
+                playersMove.setText(game.getPlayerMove());
                 gameValue.setText(game.value);
 
                 if(game.value == 5){
@@ -99,36 +104,32 @@ public class Chess extends AppCompatActivity {
                 endGame(2);
             }
         });
-        quit.setOnClickListener(v -> quit());
+        quit.setOnClickListener(v -> showQuitDialog());
     }
 
     /**
-     * Quit game. Launches AlertDialog popup asking whether or not to save game
+     * Launches AlertDialog popup asking whether or not to save game
      */
-    private void quit() {
-        AlertDialog.Builder builder = new AlertDialog.Builder();
+    private void showQuitDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext()); //I'm not sure if getApplicationContext() is the correct context here
         builder.setTitle("Would you like to save this game?");
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();;
-                saveGame();
-                returnToHome();
-            }
+        builder.setPositiveButton("Yes", (dialog, id) -> {
+            dialog.dismiss();;
+            saveInProgressGame();
+            returnToHome();
         });
-        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();
-                returnToHome();
-            }
+        builder.setNegativeButton("No", (dialog, id) -> {
+            dialog.dismiss();
+            returnToHome();
         });
         AlertDialog dialog = builder.create();
         dialog.show();
     }
 
     /**
-     * Called by quit() if user saves game
+     * Called by showQuitDialog() if user saves game
      */
-    private void saveGame(){
+    private void saveInProgressGame(){
         if(game.isSaved){
             CurrentGames.updateGame(game);
         }
@@ -136,11 +137,52 @@ public class Chess extends AppCompatActivity {
         //save new game
         else{
             //Add game to bundle
-            Intent intent = new Intent(this, Game.class);
+            Intent intent = new Intent(this, SaveNewGame.class);
             intent.putExtra(Home.GAME, new Gson().toJson(game));
             startActivity(intent);
         }
 
+        //Saves state of the application after saving the game
+        Home.saveState();
+    }
+
+    /**
+     * End of game. Win, draw, resign, etc
+     * Launches AlertDialog popup asking whether or not to save game
+     *
+     * Optimally I'd like to make this a fragment instead of an AlertDialog so that
+     * I can have text up top saying who won, and then another window asking whether
+     * or not to save the game
+     */
+    public void endGame(int endGameCode){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext()); //I'm not sure if getApplicationContext() is the correct context here
+        builder.setTitle("You won! Would you like to save this game?");
+        builder.setPositiveButton("Yes", (dialog, id) -> {
+            dialog.dismiss();;
+            saveFinishedGame();
+            returnToHome();
+        });
+        builder.setNegativeButton("No", (dialog, id) -> {
+            dialog.dismiss();
+            returnToHome();
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    /**
+     * Saves a finished game to PreviousGames
+     * Also removes game from CurrentGames if it's there, since it's no longer
+     * an in-progress game
+     */
+    private void saveFinishedGame(){
+        if(CurrentGames.containsName(game.getName())){
+            CurrentGames.deleteGame(game);
+        }
+
+        PreviousGames.addGame(game);
+
+        //Saves state of the application after saving the game
         Home.saveState();
     }
 
@@ -152,14 +194,5 @@ public class Chess extends AppCompatActivity {
         Intent intent = new Intent(this, Home.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
-    }
-
-    /**
-     * End of game. Win, draw, resign, etc
-     * Prompts user to save game
-     * @param endGameCode
-     */
-    public void endGame(int endGameCode){
-
     }
 }

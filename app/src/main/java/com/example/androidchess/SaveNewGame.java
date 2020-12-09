@@ -29,7 +29,6 @@ public class SaveNewGame extends AppCompatActivity {
         ok = findViewById(R.id.ok);
         nvm = findViewById(R.id.nvm);
 
-        //read ArrayList of current games from Json String
         String jsonGames = "";
         Bundle extras = getIntent().getExtras();
         if(extras != null){

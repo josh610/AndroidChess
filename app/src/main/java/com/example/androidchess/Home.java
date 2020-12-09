@@ -66,7 +66,7 @@ public class Home extends AppCompatActivity implements Serializable{
      */
     private void startNewGame() {
         //Create new Game and add it to bundle
-        Intent intent = new Intent(this, Game.class);
+        Intent intent = new Intent(this, Chess.class);
         intent.putExtra(GAME, new Gson().toJson(new Game()));
         startActivity(intent);
     }
