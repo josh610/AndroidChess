@@ -49,10 +49,17 @@ public class Home extends AppCompatActivity implements Serializable{
             e.printStackTrace();
         }
 
-        //Match fields with their ids
         newGame = findViewById(R.id.new_game);
         contGame = findViewById(R.id.cont_game);
         prevGames = findViewById(R.id.prev_games);
+
+        if(current_games == null){
+            current_games = new ArrayList<Game>();
+        }
+
+        if(previous_games == null){
+            previous_games = new ArrayList<Game>();
+        }
 
         //Match buttons with their ActionEvents
         newGame.setOnClickListener(v -> startNewGame());
