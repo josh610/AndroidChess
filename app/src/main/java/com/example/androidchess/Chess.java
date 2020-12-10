@@ -123,8 +123,11 @@ public class Chess extends AppCompatActivity {
             System.out.println("Add new game");
             //Add game to bundle
             Intent intent = new Intent(this, SaveNewGame.class);
+            System.out.println("test1");
             intent.putExtra(Home.GAME, new Gson().toJson(game));
+            System.out.println("test2");
             startActivity(intent);
+            System.out.println("test3");
         }
 
         //Saves state of the application after saving the game
