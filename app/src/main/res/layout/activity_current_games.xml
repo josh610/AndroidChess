@@ -7,6 +7,15 @@
     android:layout_height="match_parent"
     android:background="@color/standard_background_color">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="In-progress games"
+        android:textSize="40sp"
+        android:textColor="@color/standard_text_color"
+        android:layout_gravity="center"
+        android:fontFamily="@font/standard_font"/>
+
     <ListView
         android:id="@+id/current_games_list"
         android:layout_width="match_parent"
