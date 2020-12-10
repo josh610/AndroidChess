@@ -13,6 +13,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.androidchess.pieces.*;
+import com.example.androidchess.Game;
 import com.google.gson.Gson;
 
 import java.io.Serializable;
@@ -28,6 +30,8 @@ import java.util.ArrayList;
 public class Chess extends AppCompatActivity {
 
     private Game game;
+    private PlayerPiece selectedPiece;
+    private PlayerPiece[][] currentGameBoard;
 
     TextView playersMove;
     Button resign, quit;
@@ -69,20 +73,25 @@ public class Chess extends AppCompatActivity {
     }
 
     private void initializeGame() {
-        game.initBoard();
+        game.initBoard(currentGameBoard);
         for (int i = 0; i < 8; i++) {
             TableRow currRow = (TableRow) chess_board.getChildAt(i);
             for (int j = 0; j < 8; j++) {
                 ImageView currView = (ImageView) currRow.getChildAt(j);
                 currView.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
-                        pieceClicked();
+                        pieceClicked(v);
                     }
                 });
             }
         }
     }
-    private void pieceClicked() {
+    private void pieceClicked(View v) {
+        int currFile = 0;
+        int currRank = 0;
+        TableRow currRow = (TableRow) v.getParent();
+        currFile = currRow.indexOfChild(v);
+        currRank = chess_board.indexOfChild(currRow);
 
     }
     private void quit(){

@@ -35,23 +35,28 @@ public class Game implements Serializable {
     /**
      * The chessboard
      */
-    static PlayerPiece[][] board = new PlayerPiece[8][8];
+    private PlayerPiece[][] board;
+    public PlayerPiece[][] getBoard() { return board; }
     /**
      * The white king
      */
-    static PlayerPiece wKing;
+    private PlayerPiece wKing;
+    public PlayerPiece getwKing() { return wKing; }
     /**
      * The black king
      */
-    static PlayerPiece bKing;
+    private PlayerPiece bKing;
+    public PlayerPiece getbKing() {return bKing; }
     /**
      * ArrayList that holds the spaces that put the white king in check
      */
-    static ArrayList<int[]> wCheckSpaces = new ArrayList<int[]>(); // spaces that put white's king in check
+    private ArrayList<int[]> wCheckSpaces = new ArrayList<int[]>(); // spaces that put white's king in check
+    public ArrayList<int[]> getwCheckSpaces() { return wCheckSpaces; }
     /**
      * ArrayList that holds the spaces that put the black king in check
      */
-    static ArrayList<int[]> bCheckSpaces = new ArrayList<int[]>(); // spaces that put black's king in check
+    private ArrayList<int[]> bCheckSpaces = new ArrayList<int[]>(); // spaces that put black's king in check
+    public ArrayList<int[]> getbCheckSpaces() { return bCheckSpaces; }
     /**
      * Scanner to take command line arguments
      */
@@ -62,7 +67,8 @@ public class Game implements Serializable {
     /**
      * Initializes the board (places pieces where they go for beginning of game)
      */
-    public static void initBoard() {
+    public void initBoard(PlayerPiece[][] board) {
+        board = new PlayerPiece[8][8];
         // Black pieces
         board[0][7] = new Rook("Black", 0, 7);
         board[1][7] = new Knight("Black", 1, 7);
@@ -94,7 +100,7 @@ public class Game implements Serializable {
     /**
      * Prints the current state of the board
      */
-    public static void printBoard() {
+    public void printBoard(PlayerPiece[][] board) {
         System.out.println();
         for (int r = 7; r >= 0; r--) {
             for (int f = 0; f < 8; f++) {
@@ -120,7 +126,7 @@ public class Game implements Serializable {
      * Fills the respective CheckSpaces ArrayLists with the spaces that will put the
      * respective kings in check
      */
-    public static void scanCheckSpaces() {
+    public void scanCheckSpaces(PlayerPiece[][] board, ArrayList<int[]> wCheckSpaces, ArrayList<int[]> bCheckSpaces) {
         wCheckSpaces.clear();
         bCheckSpaces.clear();
         for (int i = 0; i < 8; i++) {
@@ -235,7 +241,7 @@ public class Game implements Serializable {
      * @return true if move is successful, false if move is unsuccessful
      */
 
-    public static boolean playerMove(String color, String move) {
+    public boolean playerMove(PlayerPiece[][] board, ArrayList<int[]> wCheckSpaces, ArrayList<int[]> bCheckSpaces, PlayerPiece wKing, PlayerPiece bKing, String color, String move) {
         int[] input = parseMove(move);
         int f1 = input[0];
         // System.out.print("f1 = " + f1 + ", ");
@@ -284,7 +290,7 @@ public class Game implements Serializable {
         board[f2][r2] = p;
         p.setCoords(f2, r2);
         // int[] tempCoords = q.getCoords();
-        scanCheckSpaces();
+        scanCheckSpaces(board, wCheckSpaces, bCheckSpaces);
         if (p.getColor().equals("White") && isInList(wCheckSpaces, wKing.getCoords())) {
             board[f1][r1] = p;
             board[f2][r2] = temp;
@@ -303,7 +309,7 @@ public class Game implements Serializable {
         p.setCoords(f1, r1);
         q = board[f2][r2];
 
-        scanCheckSpaces();
+        scanCheckSpaces(board, wCheckSpaces, bCheckSpaces);
         // check if destination contains a piece of the same color
         /*
          * if (q != null && q.getColor().contentEquals(color)) { // check for castling
@@ -469,8 +475,8 @@ public class Game implements Serializable {
         board[f1][r1] = null;
         p.setCoords(f2, r2);
         p.itHasMoved();
-        scanCheckSpaces();
-        updateCheckStatus(p.getColor());
+        scanCheckSpaces(board, wCheckSpaces, bCheckSpaces);
+        updateCheckStatus(board, wCheckSpaces, bCheckSpaces, wKing, bKing, p.getColor());
 
         // set justMovedTwo to false for all pawns that aren't the current piece
         for (int i = 0; i < 8; i++) {
@@ -492,7 +498,7 @@ public class Game implements Serializable {
      *
      * @param color the player that just moved
      */
-    public static void updateCheckStatus(String color) {
+    public void updateCheckStatus(PlayerPiece[][] board, ArrayList<int[]> wCheckSpaces, ArrayList<int[]> bCheckSpaces, PlayerPiece wKing, PlayerPiece bKing, String color) {
         boolean wIsCheckmate = false;
         boolean bIsCheckmate = false;
         int wKingMoves = ((King) wKing).getMoves(wKing, board).size();
@@ -607,7 +613,7 @@ public class Game implements Serializable {
                         bKingUnsafe++;
                     }
                 }
-                boolean bSimulation = pieceProtectSimulation("Black");
+                boolean bSimulation = pieceProtectSimulation(board, wCheckSpaces, bCheckSpaces, wKing, bKing, "Black");
                 if (bKingUnsafe == bKingMoves && isInList(bCheckSpaces, bKing.getCoords()) && !bSimulation) {
                     ((King) bKing).setCheckStatus("Checkmate");
                     System.out.println("Checkmate");
@@ -634,7 +640,7 @@ public class Game implements Serializable {
                         wKingUnsafe++;
                     }
                 }
-                boolean wSimulation = pieceProtectSimulation("White");
+                boolean wSimulation = pieceProtectSimulation(board, wCheckSpaces, bCheckSpaces, wKing, bKing, "White");
                 if (wKingUnsafe == wKingMoves && isInList(wCheckSpaces, wKing.getCoords()) && !wSimulation) {
                     ((King) wKing).setCheckStatus("Checkmate");
                     System.out.println("Checkmate");
@@ -661,7 +667,7 @@ public class Game implements Serializable {
      * @return true if it is possible to protect the current color king from being
      *         captured, false if the king cannot be protected
      */
-    public static boolean pieceProtectSimulation(String color) {
+    public boolean pieceProtectSimulation(PlayerPiece[][] board, ArrayList<int[]> wCheckSpaces, ArrayList<int[]> bCheckSpaces, PlayerPiece wKing, PlayerPiece bKing, String color) {
         ArrayList<PlayerPiece> colorPieces = new ArrayList<PlayerPiece>();
         // store all pieces of the current color in the ArrayList colorPieces
         if (color.contentEquals("White")) {
@@ -707,13 +713,13 @@ public class Game implements Serializable {
                 tempPiece = board[ftemp][rtemp];
                 board[ftemp][rtemp] = protectorPiece;
                 protectorPiece.setCoords(ftemp, rtemp);
-                scanCheckSpaces();
+                scanCheckSpaces(board, wCheckSpaces, bCheckSpaces);
                 if (color.contentEquals("White")) {
                     if (!isInList(wCheckSpaces, wKing.getCoords())) {
                         board[finitial][rinitial] = protectorPiece;
                         board[ftemp][rtemp] = tempPiece;
                         protectorPiece.setCoords(finitial, rinitial);
-                        scanCheckSpaces();
+                        scanCheckSpaces(board, wCheckSpaces, bCheckSpaces);
                         return true;
                     }
                 } else {
@@ -721,14 +727,14 @@ public class Game implements Serializable {
                         board[finitial][rinitial] = protectorPiece;
                         board[ftemp][rtemp] = tempPiece;
                         protectorPiece.setCoords(finitial, rinitial);
-                        scanCheckSpaces();
+                        scanCheckSpaces(board, wCheckSpaces, bCheckSpaces);
                         return true;
                     }
                 }
                 board[finitial][rinitial] = protectorPiece;
                 board[ftemp][rtemp] = tempPiece;
                 protectorPiece.setCoords(finitial, rinitial);
-                scanCheckSpaces();
+                scanCheckSpaces(board, wCheckSpaces, bCheckSpaces);
             }
         }
         return false;

@@ -127,7 +127,7 @@ public class Home extends AppCompatActivity implements Serializable{
 
         FileOutputStream prev_fos = new FileOutputStream("R.raw.prev_games.txt");
         ObjectOutputStream prev_oos = new ObjectOutputStream(prev_fos);
-        prev_oos.writeObject(current_games);
+        prev_oos.writeObject(previous_games);
         prev_oos.flush();
         prev_oos.close();
     }
@@ -146,7 +146,7 @@ public class Home extends AppCompatActivity implements Serializable{
 
         FileInputStream prev_fis = new FileInputStream("R.raw.prev_games.txt");
         ObjectInputStream prev_ois = new ObjectInputStream(prev_fis);
-        current_games = (ArrayList<Game>) prev_ois.readObject();
+        previous_games = (ArrayList<Game>) prev_ois.readObject();
         prev_ois.close();
     }
 }
