@@ -3,5 +3,5 @@
     <font
         android:fontStyle="normal"
         android:fontWeight="400"
-        android:font="@font/PAPYRUS" />
+        android:font="@font/papyrus" />
 </font-family>
