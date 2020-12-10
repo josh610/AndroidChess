@@ -30,7 +30,7 @@ public class GameLogic {
     /**
      * Scanner to take command line arguments
      */
-    static Scanner sc;
+    //static Scanner sc;
 
     /**
      * Initializes the board (places pieces where they go for beginning of game)
