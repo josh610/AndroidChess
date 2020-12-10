@@ -14,17 +14,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidChess">
         <activity
-            android:name=".WatchEditGame"
-            android:label="@string/title_activity_watch_edit_game"
-            android:theme="@style/Theme.AndroidChess.NoActionBar"></activity>
+            android:name=".CurrentGames"
+            android:label="@string/title_activity_current_games">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.androidchess.Home" />
+        </activity>
         <activity
             android:name=".ReplayGame"
             android:label="@string/title_activity_replay_game"
-            android:theme="@style/Theme.AndroidChess.NoActionBar" />
-        <activity
-            android:name=".SaveFinishedGame"
-            android:label="@string/title_activity_save_finished_game"
-            android:theme="@style/Theme.AndroidChess.NoActionBar" />
+            android:theme="@style/Theme.AndroidChess.NoActionBar" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.androidchess.ReplayEditGame" />
+        </activity>
         <activity
             android:name=".SaveNewGame"
             android:label="@string/title_activity_save_new_game"
@@ -32,11 +35,19 @@
         <activity
             android:name=".ReplayEditGame"
             android:label="@string/title_activity_watch_edit_game"
-            android:theme="@style/Theme.AndroidChess.NoActionBar" />
+            android:theme="@style/Theme.AndroidChess.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.androidchess.PreviousGames" />
+        </activity>
         <activity
             android:name=".PreviousGames"
             android:label="@string/title_activity_previous_games"
-            android:theme="@style/Theme.AndroidChess.NoActionBar" />
+            android:theme="@style/Theme.AndroidChess.NoActionBar" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.androidchess.Home" />
+        </activity>
         <activity
             android:name=".PlayEditGame"
             android:label="@string/title_activity_edit_game"
@@ -57,13 +68,6 @@
             android:name="com.google.android.wearable.standalone"
             android:value="false" />
 
-        <activity
-            android:name=".CurrentGames"
-            android:label="@string/title_activity_current_games">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.androidchess.Home" />
-        </activity>
         <activity
             android:name=".Chess"
             android:label="@string/title_activity_chess"

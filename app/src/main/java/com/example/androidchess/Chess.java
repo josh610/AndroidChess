@@ -53,7 +53,6 @@ class Game implements Serializable {
  * The quit option prompts the user to save the in-progress game.
  * Once the game is over, the user is prompted to save the finished game.
  */
-
 public class Chess extends AppCompatActivity {
 
     private Game game;
