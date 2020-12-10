@@ -57,6 +57,8 @@ public class Game implements Serializable {
      */
     //static Scanner sc;
 
+    private String currPlayer = "White";
+
     /**
      * Initializes the board (places pieces where they go for beginning of game)
      */
@@ -745,5 +747,9 @@ public class Game implements Serializable {
                 return true;
         }
         return false;
+    }
+
+    public String moveToString(String player, String move) {
+        return currPlayer;
     }
 }

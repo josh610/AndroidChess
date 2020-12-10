@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
@@ -32,6 +35,8 @@ public class Chess extends AppCompatActivity {
     //test buttons
     Button win, test;
 
+    TableLayout chess_board;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,8 +62,29 @@ public class Chess extends AppCompatActivity {
 
         win.setOnClickListener(v -> win());
         test.setOnClickListener(v -> test());
+
+        chess_board = findViewById(R.id.chess_board);
+        initializeGame();
+
     }
 
+    private void initializeGame() {
+        game.initBoard();
+        for (int i = 0; i < 8; i++) {
+            TableRow currRow = (TableRow) chess_board.getChildAt(i);
+            for (int j = 0; j < 8; j++) {
+                ImageView currView = (ImageView) currRow.getChildAt(j);
+                currView.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        pieceClicked();
+                    }
+                });
+            }
+        }
+    }
+    private void pieceClicked() {
+
+    }
     private void quit(){
         showQuitDialog();
     }
