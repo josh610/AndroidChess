@@ -6,50 +6,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="?attr/actionBarSize"
-    android:padding="20dp">
+    android:padding="20dp"
+    android:background="@color/standard_background_color">
 
     <TextView
         android:id="@+id/playersMove"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="40sp"
+        android:textColor="@color/standard_text_color"
+        android:layout_gravity="center"
         android:text="White's move"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <Button
-            android:id="@+id/increment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Increment"
-            android:onClick="rename"/>
-
-        <TextView
-            android:id="@+id/gameValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <Button
-            android:id="@+id/quit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/quit_label"
-            android:onClick="delete"/>
-
-        <Button
-            android:id="@+id/resign"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/resign_label"
-            android:onClick="resign"/>
-    </LinearLayout>
 
     <TableLayout
         android:id="@+id/chess_board"
@@ -65,50 +32,50 @@
                 android:id="@+id/board_a8"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:background="#f2e1c3"
+                android:background="@color/white_tile"
                 android:src="@drawable/black_rook"/>
 
             <ImageView
                 android:id="@+id/board_b8"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:background="#c3a082"
+                android:background="@color/brown_tile"
                 android:src="@drawable/black_knight"/>
             <ImageView
                 android:id="@+id/board_c8"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:background="#f2e1c3"
+                android:background="@color/white_tile"
                 android:src="@drawable/black_bishop"/>
             <ImageView
                 android:id="@+id/board_d8"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:background="#c3a082"
+                android:background="@color/brown_tile"
                 android:src="@drawable/black_king"/>
             <ImageView
                 android:id="@+id/board_e8"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:background="#f2e1c3"
+                android:background="@color/white_tile"
                 android:src="@drawable/black_queen"/>
             <ImageView
                 android:id="@+id/board_f8"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:background="#c3a082"
+                android:background="@color/brown_tile"
                 android:src="@drawable/black_bishop"/>
             <ImageView
                 android:id="@+id/board_g8"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:background="#f2e1c3"
+                android:background="@color/white_tile"
                 android:src="@drawable/black_knight"/>
             <ImageView
                 android:id="@+id/board_h8"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:background="#c3a082"
+                android:background="@color/brown_tile"
                 android:src="@drawable/black_rook"/>
         </TableRow>
 
@@ -119,49 +86,49 @@
                 android:id="@+id/board_a7"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:background="#c3a082"
+                android:background="@color/brown_tile"
                 android:src="@drawable/black_pawn"/>
             <ImageView
                 android:id="@+id/board_b7"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:background="#f2e1c3"
+                android:background="@color/white_tile"
                 android:src="@drawable/black_pawn"/>
             <ImageView
                 android:id="@+id/board_c7"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:background="#c3a082"
+                android:background="@color/brown_tile"
                 android:src="@drawable/black_pawn"/>
             <ImageView
                 android:id="@+id/board_d7"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:background="#f2e1c3"
+                android:background="@color/white_tile"
                 android:src="@drawable/black_pawn"/>
             <ImageView
                 android:id="@+id/board_e7"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:background="#c3a082"
+                android:background="@color/brown_tile"
                 android:src="@drawable/black_pawn"/>
             <ImageView
                 android:id="@+id/board_f7"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:background="#f2e1c3"
+                android:background="@color/white_tile"
                 android:src="@drawable/black_pawn"/>
             <ImageView
                 android:id="@+id/board_g7"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:background="#c3a082"
+                android:background="@color/brown_tile"
                 android:src="@drawable/black_pawn"/>
             <ImageView
                 android:id="@+id/board_h7"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:background="#f2e1c3"
+                android:background="@color/white_tile"
                 android:src="@drawable/black_pawn"/>
         </TableRow>
 
@@ -172,7 +139,7 @@
                 android:id="@+id/board_a6"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:background="#f2e1c3"/>
+                android:background="@color/white_tile"/>
 
             <ImageView
                 android:id="@+id/board_b6"
@@ -183,7 +150,7 @@
                 android:id="@+id/board_c6"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:background="#f2e1c3"/>
+                android:background="@color/white_tile"/>
             <ImageView
                 android:id="@+id/board_d6"
                 android:layout_width="46dp"
@@ -193,7 +160,7 @@
                 android:id="@+id/board_e6"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:background="#f2e1c3"/>
+                android:background="@color/white_tile"/>
             <ImageView
                 android:id="@+id/board_f6"
                 android:layout_width="46dp"
@@ -203,7 +170,7 @@
                 android:id="@+id/board_g6"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:background="#f2e1c3"/>
+                android:background="@color/white_tile"/>
             <ImageView
                 android:id="@+id/board_h6"
                 android:layout_width="46dp"
@@ -223,7 +190,7 @@
                 android:id="@+id/board_b5"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:background="#f2e1c3"/>
+                android:background="@color/white_tile"/>
             <ImageView
                 android:id="@+id/board_c5"
                 android:layout_width="46dp"
@@ -233,7 +200,7 @@
                 android:id="@+id/board_d5"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:background="#f2e1c3"/>
+                android:background="@color/white_tile"/>
             <ImageView
                 android:id="@+id/board_e5"
                 android:layout_width="46dp"
@@ -243,7 +210,7 @@
                 android:id="@+id/board_f5"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:background="#f2e1c3"/>
+                android:background="@color/white_tile"/>
             <ImageView
                 android:id="@+id/board_g5"
                 android:layout_width="46dp"
@@ -253,7 +220,7 @@
                 android:id="@+id/board_h5"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:background="#f2e1c3"/>
+                android:background="@color/white_tile"/>
         </TableRow>
         <TableRow
             android:layout_width="match_parent"
@@ -263,7 +230,7 @@
                 android:id="@+id/board_a4"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:background="#f2e1c3"/>
+                android:background="@color/white_tile"/>
 
             <ImageView
                 android:id="@+id/board_b4"
@@ -274,7 +241,7 @@
                 android:id="@+id/board_c4"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:background="#f2e1c3"/>
+                android:background="@color/white_tile"/>
             <ImageView
                 android:id="@+id/board_d4"
                 android:layout_width="46dp"
@@ -284,7 +251,7 @@
                 android:id="@+id/board_e4"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:background="#f2e1c3"/>
+                android:background="@color/white_tile"/>
             <ImageView
                 android:id="@+id/board_f4"
                 android:layout_width="46dp"
@@ -294,7 +261,7 @@
                 android:id="@+id/board_g4"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:background="#f2e1c3"/>
+                android:background="@color/white_tile"/>
             <ImageView
                 android:id="@+id/board_h4"
                 android:layout_width="46dp"
@@ -314,7 +281,7 @@
                 android:id="@+id/board_b3"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:background="#f2e1c3"/>
+                android:background="@color/white_tile"/>
             <ImageView
                 android:id="@+id/board_c3"
                 android:layout_width="46dp"
@@ -324,7 +291,7 @@
                 android:id="@+id/board_d3"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:background="#f2e1c3"/>
+                android:background="@color/white_tile"/>
             <ImageView
                 android:id="@+id/board_e3"
                 android:layout_width="46dp"
@@ -334,7 +301,7 @@
                 android:id="@+id/board_f3"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:background="#f2e1c3"/>
+                android:background="@color/white_tile"/>
             <ImageView
                 android:id="@+id/board_g3"
                 android:layout_width="46dp"
@@ -344,7 +311,7 @@
                 android:id="@+id/board_h3"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:background="#f2e1c3"/>
+                android:background="@color/white_tile"/>
         </TableRow>
 
         <TableRow
@@ -354,7 +321,7 @@
                 android:id="@+id/board_a2"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:background="#f2e1c3"
+                android:background="@color/white_tile"
                 android:src="@drawable/white_pawn"/>
 
             <ImageView
@@ -367,7 +334,7 @@
                 android:id="@+id/board_c2"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:background="#f2e1c3"
+                android:background="@color/white_tile"
                 android:src="@drawable/white_pawn"/>
             <ImageView
                 android:id="@+id/board_d2"
@@ -379,7 +346,7 @@
                 android:id="@+id/board_e2"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:background="#f2e1c3"
+                android:background="@color/white_tile"
                 android:src="@drawable/white_pawn"/>
             <ImageView
                 android:id="@+id/board_f2"
@@ -391,7 +358,7 @@
                 android:id="@+id/board_g2"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:background="#f2e1c3"
+                android:background="@color/white_tile"
                 android:src="@drawable/white_pawn"/>
             <ImageView
                 android:id="@+id/board_h2"
@@ -414,7 +381,7 @@
                 android:id="@+id/board_b1"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:background="#f2e1c3"
+                android:background="@color/white_tile"
                 android:src="@drawable/white_knight"/>
             <ImageView
                 android:id="@+id/board_c1"
@@ -426,7 +393,7 @@
                 android:id="@+id/board_d1"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:background="#f2e1c3"
+                android:background="@color/white_tile"
                 android:src="@drawable/white_king"/>
             <ImageView
                 android:id="@+id/board_e1"
@@ -438,7 +405,7 @@
                 android:id="@+id/board_f1"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:background="#f2e1c3"
+                android:background="@color/white_tile"
                 android:src="@drawable/white_bishop"/>
             <ImageView
                 android:id="@+id/board_g1"
@@ -450,10 +417,47 @@
                 android:id="@+id/board_h1"
                 android:layout_width="46dp"
                 android:layout_height="46dp"
-                android:background="#f2e1c3"
+                android:background="@color/white_tile"
                 android:src="@drawable/white_rook"/>
         </TableRow>
 
     </TableLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/quit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/quit_label"
+            android:backgroundTint="@color/standard_button_color"
+            android:onClick="quit"/>
+
+        <Button
+            android:id="@+id/resign"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/resign_label"
+            android:backgroundTint="@color/standard_button_color"
+            android:onClick="resign"/>
+
+        <Button
+            android:id="@+id/test"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:backgroundTint="@color/standard_button_color"
+            android:onClick="test"/>
+
+        <Button
+            android:id="@+id/win_game"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Win"
+            android:backgroundTint="@color/standard_button_color"
+            android:onClick="win"/>
+    </LinearLayout>
 
 </LinearLayout>

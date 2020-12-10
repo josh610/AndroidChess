@@ -4,10 +4,12 @@
     android:id="@+id/activity_previous_games"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/standard_background_color">
 
     <ListView
         android:id="@+id/previous_games_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:background="@color/white"/>
 </LinearLayout>

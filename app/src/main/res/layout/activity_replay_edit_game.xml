@@ -6,13 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="?attr/actionBarSize"
-    android:padding="20dp">
+    android:padding="20dp"
+    android:background="@color/standard_background_color">
 
     <Button
         android:id="@+id/replay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Replay"
+        android:backgroundTint="@color/standard_button_color"
         android:onClick="replayGame"/>
 
     <LinearLayout
@@ -30,6 +32,7 @@
             android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:text="@string/ok_label"
+            android:backgroundTint="@color/standard_button_color"
             android:onClick="rename"/>
     </LinearLayout>
 
@@ -38,7 +41,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/delete_label"
-        android:backgroundTint="@color/red"
+        android:backgroundTint="@color/delete_button_color"
         android:onClick="delete"/>
 
 </LinearLayout>

@@ -17,23 +17,18 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 /**
- * Contains all game logic.
+ * Game object
  */
 class Game implements Serializable {
 
     private String name;
     private LocalDateTime date;
-
-    //Records all moves in the game ("White D2->E4", "Black B1->G7 Queen", "White Resign")
-    private ArrayList<String> moves;
-
-    //Whether or not this game has been saved
-    public boolean isSaved = false;
-
-    //This is just for testing purposes
-    public int value = 0;
-
+    private ArrayList<String> moves; //Records all moves in the game ("White D2->E4", "Black B1->G7 Queen", "White Resign")
+    public boolean isSaved = false; //Whether or not this game has been saved
     private String playerMove = "White's move";
+
+
+    /** Getter/Setter Methods **/
 
     public String getName(){
         return name;
@@ -63,8 +58,11 @@ public class Chess extends AppCompatActivity {
 
     private Game game;
 
-    TextView playersMove, gameValue;
-    Button increment, resign, quit;
+    TextView playersMove;
+    Button resign, quit;
+
+    //test buttons
+    Button win, test;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,8 +70,6 @@ public class Chess extends AppCompatActivity {
         setContentView(R.layout.activity_chess);
 
         playersMove = findViewById(R.id.playersMove);
-        gameValue = findViewById(R.id.gameValue);
-        increment = findViewById(R.id.increment);
         resign = findViewById(R.id.resign);
         quit = findViewById(R.id.quit);
 
@@ -84,27 +80,19 @@ public class Chess extends AppCompatActivity {
         }
         game = new Gson().fromJson(jsonGames, Game.class);
 
-        increment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                game.value++;
-                if(game.getPlayerMove().equals("White's move")) game.setPlayerMove("Black's move");
-                else game.setPlayerMove("White's move");
-                playersMove.setText(game.getPlayerMove());
-                gameValue.setText(game.value);
+        resign.setOnClickListener(v -> endGame(2));
+        quit.setOnClickListener(v -> quit());
 
-                if(game.value == 5){
-                    endGame(1);
-                }
-            }
-        });
-        resign.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                endGame(2);
-            }
-        });
-        quit.setOnClickListener(v -> showQuitDialog());
+
+        win = findViewById(R.id.win_game);
+        test = findViewById(R.id.test);
+
+        win.setOnClickListener(v -> win());
+        test.setOnClickListener(v -> test());
+    }
+
+    private void quit(){
+        showQuitDialog();
     }
 
     /**
@@ -194,5 +182,15 @@ public class Chess extends AppCompatActivity {
         Intent intent = new Intent(this, Home.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
+    }
+
+    private void win(){
+        endGame(1);
+    }
+
+    private void test(){
+        int n = Integer.parseInt(test.getText().toString());
+        n++;
+        test.setText(Integer.toString(n));
     }
 }
