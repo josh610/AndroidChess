@@ -98,4 +98,12 @@ public class SavedGames extends AppCompatActivity{
     public static void addGame(Game game){
         games.add(game);
     }
+
+    public static void deleteGame(Game game){
+        for(int i = 0; i<games.size(); i++){
+            if(games.get(i).getName().equals(game.getName())){
+                games.remove(i);
+            }
+        }
+    }
 }

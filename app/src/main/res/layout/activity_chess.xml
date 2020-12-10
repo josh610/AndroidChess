@@ -18,24 +18,32 @@
         android:textColor="@color/standard_text_color"
         android:layout_gravity="center"
         android:text="White's move"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="10dp"
+        android:layout_gravity="center">
 
         <Button
             android:id="@+id/undo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="undo" />
+            android:backgroundTint="@color/standard_button_color"
+            android:text="@string/undo_button"
+            android:textColor="@color/standard_text_color"
+            android:fontFamily="@font/standard_font"/>
 
         <Button
             android:id="@+id/ai_move"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="AI" />
+            android:backgroundTint="@color/standard_button_color"
+            android:text="@string/ai_button"
+            android:textColor="@color/standard_text_color"
+            android:fontFamily="@font/standard_font"/>
     </LinearLayout>
     <TableLayout
         android:id="@+id/chess_board"
@@ -44,7 +52,6 @@
         android:background="@drawable/board_outline"
         android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal">
-_
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="40dp">
@@ -447,13 +454,17 @@ _
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center"
+        android:paddingTop="70dp">
 
         <Button
             android:id="@+id/quit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/quit_label"
+            android:textColor="@color/standard_text_color"
+            android:fontFamily="@font/standard_font"
             android:backgroundTint="@color/standard_button_color"
             android:onClick="quit"/>
 
@@ -462,6 +473,8 @@ _
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/resign_label"
+            android:textColor="@color/standard_text_color"
+            android:fontFamily="@font/standard_font"
             android:backgroundTint="@color/standard_button_color"
             android:onClick="resign"/>
 

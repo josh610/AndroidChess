@@ -48,4 +48,6 @@
     <string name="new_name_hint">Name your game</string>
     <string name="save_label">Save</string>
     <string name="title_activity_save_game">SaveGame</string>
+    <string name="undo_button">Undo</string>
+    <string name="ai_button">AI</string>
 </resources>
