@@ -119,13 +119,13 @@ public class Home extends AppCompatActivity implements Serializable{
      * @throws ClassNotFoundException
      */
     private static void writeApp() throws IOException, ClassNotFoundException{
-        FileOutputStream cur_fos = new FileOutputStream("R.raw.curGames.txt");
+        FileOutputStream cur_fos = new FileOutputStream("R.raw.cur_games.txt");
         ObjectOutputStream cur_oos = new ObjectOutputStream(cur_fos);
         cur_oos.writeObject(current_games);
         cur_oos.flush();
         cur_oos.close();
 
-        FileOutputStream prev_fos = new FileOutputStream("R.raw.prevGames.txt");
+        FileOutputStream prev_fos = new FileOutputStream("R.raw.prev_games.txt");
         ObjectOutputStream prev_oos = new ObjectOutputStream(prev_fos);
         prev_oos.writeObject(current_games);
         prev_oos.flush();
@@ -139,12 +139,12 @@ public class Home extends AppCompatActivity implements Serializable{
      * @throws ClassNotFoundException
      */
     private static void readApp() throws IOException, ClassNotFoundException{
-        FileInputStream cur_fis = new FileInputStream("R.raw.curGames.txt");
+        FileInputStream cur_fis = new FileInputStream("R.raw.cur_games.txt");
         ObjectInputStream cur_ois = new ObjectInputStream(cur_fis);
         current_games = (ArrayList<Game>) cur_ois.readObject();
         cur_ois.close();
 
-        FileInputStream prev_fis = new FileInputStream("R.raw.curGames.txt");
+        FileInputStream prev_fis = new FileInputStream("R.raw.prev_games.txt");
         ObjectInputStream prev_ois = new ObjectInputStream(prev_fis);
         current_games = (ArrayList<Game>) prev_ois.readObject();
         prev_ois.close();
