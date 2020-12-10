@@ -1,6 +1,5 @@
 package com.example.androidchess;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -12,8 +11,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.appcompat.widget.Toolbar;
-
 import com.google.gson.Gson;
 
 /**
@@ -21,7 +18,7 @@ import com.google.gson.Gson;
  * rename selected game, or delete selected game.
  */
 
-public class ReplayEditGame extends AppCompatActivity {
+public class EditGame extends AppCompatActivity {
 
     public static final String GAME_INDEX = "gameIndex";
     public static final String GAME_NAME = "name";
@@ -37,7 +34,7 @@ public class ReplayEditGame extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_play_edit_game);
+        setContentView(R.layout.activity_edit_game);
 
         //activate up arrow to PreviousGames
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -94,13 +91,12 @@ public class ReplayEditGame extends AppCompatActivity {
     private void saveName(){
         try{
             game.setName(rename.getText().toString());
-            game.isSaved = true;
-            CurrentGames.addGame(game);
+            SavedGames.addGame(game);
 
             finish();
         }
         catch(Exception e){
-            Toast.makeText(ReplayEditGame.this, "Please enter a valid name", Toast.LENGTH_LONG).show();
+            Toast.makeText(EditGame.this, "Please enter a valid name", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -112,11 +108,11 @@ public class ReplayEditGame extends AppCompatActivity {
     }
 
     private void showDeleteDialog(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(ReplayEditGame.this); //I'm not sure if getApplicationContext() is the correct context here
+        AlertDialog.Builder builder = new AlertDialog.Builder(EditGame.this); //I'm not sure if getApplicationContext() is the correct context here
         builder.setTitle("Are you sure?");
         builder.setPositiveButton("Yes", (dialog, id) -> {
             dialog.dismiss();;
-            CurrentGames.deleteGame(game);
+            SavedGames.deleteGame(game);
         });
         builder.setNegativeButton("No", (dialog, id) -> dialog.dismiss());
         AlertDialog dialog = builder.create();

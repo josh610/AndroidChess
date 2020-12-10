@@ -2,7 +2,6 @@ package com.example.androidchess;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -10,10 +9,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.Gson;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -21,7 +16,7 @@ import java.util.ArrayList;
  * Allows user to choose a game to play/edit/delete
  */
 
-public class PreviousGames extends AppCompatActivity{
+public class SavedGames extends AppCompatActivity{
 
     private ListView listView;
     //ArrayList of finished games
@@ -35,7 +30,7 @@ public class PreviousGames extends AppCompatActivity{
      * constructor for something (I think serialization?) to work.
      * This constructor might not need to be here.
      */
-    public PreviousGames(){}
+    public SavedGames(){}
 
     /**
      * @param savedInstanceState
@@ -43,7 +38,7 @@ public class PreviousGames extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_previous_games);
+        setContentView(R.layout.activity_saved_games);
 
         //activate up arrow to Home
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -67,15 +62,15 @@ public class PreviousGames extends AppCompatActivity{
 
     /**
      * Shows info for selected game including option to play, rename, or delete
-     * Starts PlayEditGame activity
+     * Starts EditGame activity
      * @param pos position of game in ArrayList/ListView
      */
     private void editGame(int pos){
         Bundle bundle = new Bundle();
         Game game = games.get(pos);
-        bundle.putInt(PlayEditGame.GAME_INDEX, pos);
-        bundle.putString(PlayEditGame.GAME_NAME, game.getName());
-        Intent intent = new Intent(this, ReplayEditGame.class);
+        bundle.putInt(EditGame.GAME_INDEX, pos);
+        bundle.putString(EditGame.GAME_NAME, game.getName());
+        Intent intent = new Intent(this, EditGame.class);
         intent.putExtras(bundle);
         startActivityForResult(intent, RENAME_GAME_CODE);
     }
@@ -102,35 +97,5 @@ public class PreviousGames extends AppCompatActivity{
      */
     public static void addGame(Game game){
         games.add(game);
-    }
-
-    public static void updateGame(Game game){
-        for(int i = 0; i<games.size(); i++){
-            if(games.get(i).equals(game)){
-                games.set(i, game);
-            }
-        }
-    }
-
-    /**
-     *
-     * @param requestCode
-     * @param resultCode
-     * @param intent
-     */
-    protected void onActivityResult(int requestCode, int resultCode, Intent intent){
-        super.onActivityResult(requestCode, resultCode, intent);
-
-        if(resultCode != RESULT_OK){
-            return;
-        }
-
-        Bundle bundle = intent.getExtras();
-        if(bundle == null){
-            return;
-        }
-
-        String name = bundle.getString(PlayEditGame.GAME_NAME);
-        int index = bundle.getInt(PlayEditGame.GAME_INDEX);
     }
 }

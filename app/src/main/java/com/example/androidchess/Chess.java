@@ -1,6 +1,5 @@
 package com.example.androidchess;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -14,10 +13,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.Gson;
-
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 /**
  * Game screen.
@@ -82,56 +77,30 @@ public class Chess extends AppCompatActivity {
             }
         }
     }
+
     private void pieceClicked() {
 
     }
+
     private void quit(){
         showQuitDialog();
     }
 
     /**
-     * Launches AlertDialog popup asking whether or not to save game
+     * bhdebjcebrfnc
      */
     private void showQuitDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(Chess.this); //I'm not sure if getApplicationContext() is the correct context here
-        builder.setTitle("Would you like to save this game?");
+        AlertDialog.Builder builder = new AlertDialog.Builder(Chess.this);
+        builder.setTitle("Are you sure?");
         builder.setPositiveButton("Yes", (dialog, id) -> {
             dialog.dismiss();;
-            System.out.println("This should print after the dialogue window is closed");
-            saveInProgressGame();
             returnToHome();
         });
         builder.setNegativeButton("No", (dialog, id) -> {
             dialog.dismiss();
-            returnToHome();
         });
         AlertDialog dialog = builder.create();
         dialog.show();
-    }
-
-    /**
-     * Called by showQuitDialog() if user saves game
-     */
-    private void saveInProgressGame(){
-        if(game.isSaved){
-            System.out.println("Updating current game");
-            CurrentGames.updateGame(game);
-        }
-
-        //save new game
-        else{
-            System.out.println("Add new game");
-            //Add game to bundle
-            Intent intent = new Intent(this, SaveNewGame.class);
-            System.out.println("test1");
-            intent.putExtra(Home.GAME, new Gson().toJson(game));
-            System.out.println("test2");
-            startActivity(intent);
-            System.out.println("test3");
-        }
-
-        //Saves state of the application after saving the game
-        Home.saveState();
     }
 
     /**
@@ -147,7 +116,7 @@ public class Chess extends AppCompatActivity {
         builder.setTitle("You won! Would you like to save this game?");
         builder.setPositiveButton("Yes", (dialog, id) -> {
             dialog.dismiss();;
-            saveFinishedGame();
+            saveGame();
             returnToHome();
         });
         builder.setNegativeButton("No", (dialog, id) -> {
@@ -159,16 +128,12 @@ public class Chess extends AppCompatActivity {
     }
 
     /**
-     * Saves a finished game to PreviousGames
-     * Also removes game from CurrentGames if it's there, since it's no longer
-     * an in-progress game
+     * Saves game
      */
-    private void saveFinishedGame(){
-        if(CurrentGames.containsName(game.getName())){
-            CurrentGames.deleteGame(game);
-        }
-
-        PreviousGames.addGame(game);
+    private void saveGame(){
+        Intent intent = new Intent(this, SaveGame.class);
+        intent.putExtra(Home.GAME, new Gson().toJson(game));
+        startActivity(intent);
 
         //Saves state of the application after saving the game
         Home.saveState();
