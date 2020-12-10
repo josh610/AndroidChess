@@ -97,6 +97,7 @@ public class Chess extends AppCompatActivity {
         builder.setTitle("Would you like to save this game?");
         builder.setPositiveButton("Yes", (dialog, id) -> {
             dialog.dismiss();;
+            System.out.println("This should print after the dialogue window is closed");
             saveInProgressGame();
             returnToHome();
         });
@@ -113,11 +114,13 @@ public class Chess extends AppCompatActivity {
      */
     private void saveInProgressGame(){
         if(game.isSaved){
+            System.out.println("Updating current game");
             CurrentGames.updateGame(game);
         }
 
         //save new game
         else{
+            System.out.println("Add new game");
             //Add game to bundle
             Intent intent = new Intent(this, SaveNewGame.class);
             intent.putExtra(Home.GAME, new Gson().toJson(game));
@@ -172,6 +175,7 @@ public class Chess extends AppCompatActivity {
      * Brings user back to home screen
      */
     private void returnToHome(){
+        System.out.println("Returning to home screen");
         //Clear back stack (?)
         Intent intent = new Intent(this, Home.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -183,6 +187,7 @@ public class Chess extends AppCompatActivity {
     }
 
     private void test(){
+        System.out.println("test");
         int n = Integer.parseInt(test.getText().toString());
         n++;
         test.setText(Integer.toString(n));

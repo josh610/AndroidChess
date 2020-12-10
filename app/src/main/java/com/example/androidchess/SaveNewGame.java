@@ -49,6 +49,7 @@ public class SaveNewGame extends AppCompatActivity {
      * Raises a toast if no name is entered
      */
     public void save(){
+        System.out.println("Saving game from SaveNewGame");
         try{
             game.setName(name.getText().toString());
             game.isSaved = true;
