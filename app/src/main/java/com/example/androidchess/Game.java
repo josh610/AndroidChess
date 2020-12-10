@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class GameLogic implements Serializable {
+public class Game implements Serializable {
     private String name;
     private LocalDateTime date;
     private ArrayList<String> moves; //Records all moves in the game ("White D2->E4", "Black B1->G7 Queen", "White Resign")
