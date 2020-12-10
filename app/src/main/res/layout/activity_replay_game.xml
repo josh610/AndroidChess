@@ -11,15 +11,17 @@
 
     <TextView
         android:id="@+id/player_move"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="40sp"
         android:textColor="@color/standard_text_color"
-        android:text="White's move"/>
+        android:fontFamily="@font/standard_font"
+        android:text="White's move"
+        android:layout_gravity="center"/>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <Button
             android:id="@+id/next_move"
@@ -27,6 +29,7 @@
             android:layout_height="wrap_content"
             android:text="@string/next_move_label"
             android:backgroundTint="@color/standard_button_color"
+            android:layout_alignParentLeft="true"
             android:onClick="nextMove"/>
 
         <Button
@@ -35,6 +38,9 @@
             android:layout_height="wrap_content"
             android:text="@string/prev_move_label"
             android:backgroundTint="@color/standard_button_color"
+            android:layout_alignParentRight="true"
             android:onClick="prevMove"/>
-    </LinearLayout>
+
+    </RelativeLayout>
+
 </LinearLayout>

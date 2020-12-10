@@ -112,7 +112,7 @@ public class PlayEditGame extends AppCompatActivity {
     }
 
     private void showDeleteDialog(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext()); //I'm not sure if getApplicationContext() is the correct context here
+        AlertDialog.Builder builder = new AlertDialog.Builder(PlayEditGame.this); //I'm not sure if getApplicationContext() is the correct context here
         builder.setTitle("Are you sure?");
         builder.setPositiveButton("Yes", (dialog, id) -> {
             dialog.dismiss();;
