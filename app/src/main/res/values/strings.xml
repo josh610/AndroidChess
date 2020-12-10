@@ -45,4 +45,5 @@
     <string name="title_activity_replay_game">ReplayGame</string>
     <string name="prev_move_label">Previous move</string>
     <string name="next_move_label">Next move</string>
+    <string name="new_name_hint">Name your game</string>
 </resources>

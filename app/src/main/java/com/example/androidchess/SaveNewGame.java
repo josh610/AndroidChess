@@ -23,11 +23,11 @@ public class SaveNewGame extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_save_game);
+        setContentView(R.layout.activity_save_new_game);
 
-        //name = findViewById(R.id.rename);
-        //ok = findViewById(R.id.ok);
-        //nvm = findViewById(R.id.nvm);
+        name = findViewById(R.id.rename);
+        ok = findViewById(R.id.ok);
+        nvm = findViewById(R.id.nvm);
 
         String jsonGames = "";
         Bundle extras = getIntent().getExtras();
@@ -39,9 +39,8 @@ public class SaveNewGame extends AppCompatActivity {
 
     /**
      * Never mind
-     * @param v
      */
-    public void cancel(View v){
+    public void cancel(){
         finish();
     }
 
