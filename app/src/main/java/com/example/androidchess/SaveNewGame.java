@@ -25,7 +25,7 @@ public class SaveNewGame extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_save_new_game);
 
-        name = findViewById(R.id.rename);
+        name = findViewById(R.id.enter_new_name);
         ok = findViewById(R.id.ok);
         nvm = findViewById(R.id.nvm);
 
@@ -49,6 +49,7 @@ public class SaveNewGame extends AppCompatActivity {
      * Raises a toast if no name is entered
      */
     public void save(){
+        System.out.println("Saving game from SaveNewGame");
         try{
             game.setName(name.getText().toString());
             game.isSaved = true;
