@@ -18,7 +18,10 @@
         android:textColor="@color/standard_text_color"
         android:layout_gravity="center"
         android:text="White's move"/>
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </LinearLayout>
     <TableLayout
         android:id="@+id/chess_board"
         android:layout_width="368dp"
