@@ -89,14 +89,18 @@ public class EditGame extends AppCompatActivity {
      * Rename selected game
      */
     private void saveName(){
-        try{
+        String newName = rename.getText().toString();
+        if(newName == null || newName.length() == 0) {
+            Toast.makeText(EditGame.this, "Please enter a valid name", Toast.LENGTH_LONG).show();
+        }
+        else if(SavedGames.containsName(newName)){
+            Toast.makeText(EditGame.this, "A game with this name already exists", Toast.LENGTH_LONG).show();
+        }
+        else {
             game.setName(rename.getText().toString());
             SavedGames.addGame(game);
 
             finish();
-        }
-        catch(Exception e){
-            Toast.makeText(EditGame.this, "Please enter a valid name", Toast.LENGTH_LONG).show();
         }
     }
 
