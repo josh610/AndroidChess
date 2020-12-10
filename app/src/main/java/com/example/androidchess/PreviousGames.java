@@ -43,18 +43,18 @@ public class PreviousGames extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_current_games);
+        setContentView(R.layout.activity_previous_games);
 
         //activate up arrow to Home
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        listView = (ListView) findViewById(R.id.current_games_list);
+        listView = (ListView) findViewById(R.id.previous_games_list);
 
         //read ArrayList of current games from Json String
         String jsonGames = "";
         Bundle extras = getIntent().getExtras();
         if(extras != null){
-            jsonGames = extras.getString("current_games");
+            jsonGames = extras.getString("previous_games");
         }
         games = new Gson().fromJson(jsonGames, ArrayList.class);
 

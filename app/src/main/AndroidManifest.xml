@@ -42,8 +42,7 @@
         </activity>
         <activity
             android:name=".PreviousGames"
-            android:label="@string/title_activity_previous_games"
-            android:theme="@style/Theme.AndroidChess.NoActionBar" >
+            android:label="@string/title_activity_previous_games">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.androidchess.Home" />
@@ -71,7 +70,7 @@
         <activity
             android:name=".Chess"
             android:label="@string/title_activity_chess"
-            android:theme="@style/Theme.AndroidChess.NoActionBar" />
+            android:theme="@style/Theme.AndroidChess.NoActionBar"/>
         <activity android:name=".Home">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
