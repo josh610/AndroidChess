@@ -41,8 +41,10 @@
         android:id="@+id/chess_board"
         android:layout_width="320dp"
         android:layout_height="320dp"
-        android:background="@drawable/board_outline">
-
+        android:background="@drawable/board_outline"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal">
+_
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="40dp">

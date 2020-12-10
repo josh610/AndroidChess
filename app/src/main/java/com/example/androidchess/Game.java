@@ -36,6 +36,9 @@ public class Game implements Serializable {
      */
     private PlayerPiece[][] board;
     public PlayerPiece[][] getBoard() { return board; }
+
+    private int gameStatus;
+    public void setGameStatus(int status) { gameStatus = status; }
     /**
      * The white king
      */
@@ -62,12 +65,13 @@ public class Game implements Serializable {
     //static Scanner sc;
 
     private String currPlayer = "White";
+    public String getCurrPlayer() { return currPlayer; }
+    public void setCurrPlayer(String player) { currPlayer = player; }
 
     /**
      * Initializes the board (places pieces where they go for beginning of game)
      */
     public void initBoard(PlayerPiece[][] board) {
-        board = new PlayerPiece[8][8];
         // Black pieces
         board[0][7] = new Rook("Black", 0, 7);
         board[1][7] = new Knight("Black", 1, 7);
@@ -753,6 +757,15 @@ public class Game implements Serializable {
         }
         return false;
     }
+    public static String intToMove(int prevRow, int prevCol, int nextRow, int nextCol) {
+        char prevFile = (char) (prevCol + 97);
+        int prevRank = prevRow + 1;
+        char nextFile = (char) (nextCol + 97);
+        int nextRank = nextRow + 1;
+        System.out.println(prevFile + prevRank + " " + nextFile + nextRank);
+        return prevFile + prevRank + " " + nextFile + nextRank;
+    }
+
 
     public String moveToString(String player, String move) {
         return currPlayer;

@@ -112,7 +112,7 @@ public class EditGame extends AppCompatActivity {
         builder.setTitle("Are you sure?");
         builder.setPositiveButton("Yes", (dialog, id) -> {
             dialog.dismiss();;
-            SavedGames.deleteGame(game);
+            //SavedGames.deleteGame(game);
         });
         builder.setNegativeButton("No", (dialog, id) -> dialog.dismiss());
         AlertDialog dialog = builder.create();

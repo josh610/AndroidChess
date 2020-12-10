@@ -9,4 +9,6 @@
     <color name="delete_button_color">#CD4A4A</color>
     <color name="white_tile">#f2e1c3</color>
     <color name="brown_tile">#c3a082</color>
+    <color name="white_tile_valid">#f7ed66</color>
+    <color name="brown_tile_valid">#dcca38</color>
 </resources>
