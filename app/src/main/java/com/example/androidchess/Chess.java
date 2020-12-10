@@ -120,7 +120,7 @@ public class Chess extends AppCompatActivity {
      * I can have text up top saying who won, and then another window asking whether
      * or not to save the game
      */
-    public void endGame(int endGameCode){
+    private void endGame(int endGameCode){
         AlertDialog.Builder builder = new AlertDialog.Builder(Chess.this); //I'm not sure if getApplicationContext() is the correct context here
         builder.setTitle("You won! Would you like to save this game?");
         builder.setPositiveButton("Yes", (dialog, id) -> {
