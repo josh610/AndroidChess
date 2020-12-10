@@ -2,11 +2,36 @@ package com.example.androidchess;
 
 import com.example.androidchess.pieces.*;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class GameLogic {
+public class GameLogic implements Serializable {
+    private String name;
+    private LocalDateTime date;
+    private ArrayList<String> moves; //Records all moves in the game ("White D2->E4", "Black B1->G7 Queen", "White Resign")
+    public boolean isSaved = false; //Whether or not this game has been saved
+    private String playerMove = "White's move";
+
+    /** Getter/Setter Methods **/
+
+    public String getName(){
+        return name;
+    }
+
+    public void setName(String name){
+        this.name = name;
+    }
+
+    public String getPlayerMove(){
+        return playerMove;
+    }
+
+    public void setPlayerMove(String playerMove){
+        this.playerMove = playerMove;
+    }
     /**
      * The chessboard
      */
