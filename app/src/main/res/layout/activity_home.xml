@@ -29,6 +29,8 @@
         android:layout_margin="15dp"
         android:text="@string/new_game_label"
         android:textSize="20sp"
+        android:textColor="@color/standard_text_color"
+        android:fontFamily="@font/standard_font"
         android:backgroundTint="@color/standard_button_color"
         android:layout_gravity="center"/>
 
@@ -38,6 +40,8 @@
         android:layout_height="wrap_content"
         android:text="@string/cont_game_label"
         android:textSize="20sp"
+        android:textColor="@color/standard_text_color"
+        android:fontFamily="@font/standard_font"
         android:layout_margin="15dp"
         android:backgroundTint="@color/standard_button_color"
         android:layout_gravity="center"/>
@@ -48,6 +52,8 @@
         android:layout_height="wrap_content"
         android:text="@string/prev_games_label"
         android:textSize="20sp"
+        android:textColor="@color/standard_text_color"
+        android:fontFamily="@font/standard_font"
         android:layout_margin="15dp"
         android:backgroundTint="@color/standard_button_color"
         android:layout_gravity="center"/>

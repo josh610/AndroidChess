@@ -13,6 +13,8 @@
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
        android:text="Play"
+       android:textColor="@color/standard_text_color"
+       android:fontFamily="@font/standard_font"
        android:backgroundTint="@color/standard_button_color"
        android:onClick="playGame"/>
 
@@ -31,6 +33,8 @@
             android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:text="@string/ok_label"
+            android:textColor="@color/standard_text_color"
+            android:fontFamily="@font/standard_font"
             android:backgroundTint="@color/standard_button_color"
             android:onClick="rename"/>
     </LinearLayout>
@@ -40,6 +44,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/delete_label"
+        android:textColor="@color/standard_text_color"
+        android:fontFamily="@font/standard_font"
         android:backgroundTint="@color/delete_button_color"
         android:onClick="delete"/>
 

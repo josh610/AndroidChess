@@ -30,16 +30,20 @@
             android:id="@+id/nvm"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:text="@string/delete_label"
+            android:text="@string/nvm_label"
+            android:textColor="@color/standard_text_color"
+            android:fontFamily="@font/standard_font"
             android:backgroundTint="@color/delete_button_color"
             android:layout_alignParentLeft="true"
             android:onClick="cancel"/>
 
         <Button
-            android:id="@+id/ok"
+            android:id="@+id/save"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:text="@string/delete_label"
+            android:text="@string/save_label"
+            android:textColor="@color/standard_text_color"
+            android:fontFamily="@font/standard_font"
             android:backgroundTint="@color/standard_button_color"
             android:layout_alignParentRight="true"
             android:onClick="save"/>

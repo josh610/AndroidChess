@@ -18,7 +18,7 @@ public class SaveNewGame extends AppCompatActivity {
 
     Game game;
     EditText name;
-    Button ok, nvm;
+    Button save, nvm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +26,7 @@ public class SaveNewGame extends AppCompatActivity {
         setContentView(R.layout.activity_save_new_game);
 
         name = findViewById(R.id.enter_new_name);
-        ok = findViewById(R.id.ok);
+        save = findViewById(R.id.save);
         nvm = findViewById(R.id.nvm);
 
         String jsonGames = "";
@@ -35,6 +35,9 @@ public class SaveNewGame extends AppCompatActivity {
             jsonGames = extras.getString("game");
         }
         game = new Gson().fromJson(jsonGames, Game.class);
+
+        save.setOnClickListener(v -> save());
+        nvm.setOnClickListener(v -> cancel());
     }
 
     /**
