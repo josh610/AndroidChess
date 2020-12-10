@@ -14,6 +14,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidChess">
         <activity
+            android:name=".SaveGame"
+            android:label="@string/title_activity_save_game"
+            android:theme="@style/Theme.AndroidChess.NoActionBar"></activity>
+        <activity
             android:name=".CurrentGames"
             android:label="@string/title_activity_current_games">
             <meta-data
@@ -23,25 +27,25 @@
         <activity
             android:name=".ReplayGame"
             android:label="@string/title_activity_replay_game"
-            android:theme="@style/Theme.AndroidChess.NoActionBar" >
+            android:theme="@style/Theme.AndroidChess.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.androidchess.ReplayEditGame" />
+                android:value="com.example.androidchess.EditGame" />
         </activity>
         <activity
             android:name=".SaveNewGame"
             android:label="@string/title_activity_save_new_game"
             android:theme="@style/Theme.AndroidChess.NoActionBar" />
         <activity
-            android:name=".ReplayEditGame"
+            android:name=".EditGame"
             android:label="@string/title_activity_watch_edit_game"
             android:theme="@style/Theme.AndroidChess.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.androidchess.PreviousGames" />
+                android:value="com.example.androidchess.SavedGames" />
         </activity>
         <activity
-            android:name=".PreviousGames"
+            android:name=".SavedGames"
             android:label="@string/title_activity_previous_games">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -70,7 +74,7 @@
         <activity
             android:name=".Chess"
             android:label="@string/title_activity_chess"
-            android:theme="@style/Theme.AndroidChess.NoActionBar"/>
+            android:theme="@style/Theme.AndroidChess.NoActionBar" />
         <activity android:name=".Home">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

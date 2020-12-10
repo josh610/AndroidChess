@@ -35,7 +35,7 @@
             android:fontFamily="@font/standard_font"
             android:backgroundTint="@color/delete_button_color"
             android:layout_alignParentLeft="true"
-            android:onClick="cancel"/>
+            android:onClick="nvm"/>
 
         <Button
             android:id="@+id/save"

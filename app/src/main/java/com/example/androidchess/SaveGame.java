@@ -2,28 +2,31 @@ package com.example.androidchess;
 
 import android.os.Bundle;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-/**
- * Saves a new game to CurrentGames
- */
-public class SaveNewGame extends AppCompatActivity {
+import java.util.ArrayList;
 
-    Game game;
+public class SaveGame extends AppCompatActivity {
+
+    private Game game;
+
     EditText name;
-    Button save, nvm;
+    private Button save, nvm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_save_new_game);
+        setContentView(R.layout.activity_save_game);
 
         name = findViewById(R.id.enter_new_name);
         save = findViewById(R.id.save);
@@ -32,36 +35,35 @@ public class SaveNewGame extends AppCompatActivity {
         String jsonGames = "";
         Bundle extras = getIntent().getExtras();
         if(extras != null){
-            jsonGames = extras.getString("game");
+            jsonGames = extras.getString("previous_games");
         }
         game = new Gson().fromJson(jsonGames, Game.class);
 
         save.setOnClickListener(v -> save());
-        nvm.setOnClickListener(v -> cancel());
+        nvm.setOnClickListener(v -> nvm());
     }
 
     /**
-     * Never mind
+     * Save game
      */
-    public void cancel(){
-        finish();
-    }
-
-    /**
-     * Saves new game with given name.
-     * Raises a toast if no name is entered
-     */
-    public void save(){
-        System.out.println("Saving game from SaveNewGame");
+    private void save(){
         try{
             game.setName(name.getText().toString());
-            game.isSaved = true;
-            CurrentGames.addGame(game);
+            SavedGames.addGame(game);
 
             finish();
         }
         catch(Exception e){
-            Toast.makeText(SaveNewGame.this, "Please enter a valid name", Toast.LENGTH_LONG).show();
+            Toast.makeText(SaveGame.this, "Please enter a valid name", Toast.LENGTH_LONG).show();
         }
+
+        finish();
+    }
+
+    /**
+     * Never mind game
+     */
+    private void nvm(){
+        finish();
     }
 }

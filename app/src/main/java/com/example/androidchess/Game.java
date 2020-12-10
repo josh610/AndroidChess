@@ -12,7 +12,6 @@ public class Game implements Serializable {
     private String name;
     private LocalDateTime date;
     private ArrayList<String> moves; //Records all moves in the game ("White D2->E4", "Black B1->G7 Queen", "White Resign")
-    public boolean isSaved = false; //Whether or not this game has been saved
     private String playerMove = "White's move";
 
     /** Getter/Setter Methods **/
