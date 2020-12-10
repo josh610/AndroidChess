@@ -67,7 +67,7 @@ public class Chess extends AppCompatActivity {
      * Launches AlertDialog popup asking whether or not to save game
      */
     private void showQuitDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext()); //I'm not sure if getApplicationContext() is the correct context here
+        AlertDialog.Builder builder = new AlertDialog.Builder(Chess.this); //I'm not sure if getApplicationContext() is the correct context here
         builder.setTitle("Would you like to save this game?");
         builder.setPositiveButton("Yes", (dialog, id) -> {
             dialog.dismiss();;
@@ -111,7 +111,7 @@ public class Chess extends AppCompatActivity {
      * or not to save the game
      */
     public void endGame(int endGameCode){
-        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext()); //I'm not sure if getApplicationContext() is the correct context here
+        AlertDialog.Builder builder = new AlertDialog.Builder(Chess.this); //I'm not sure if getApplicationContext() is the correct context here
         builder.setTitle("You won! Would you like to save this game?");
         builder.setPositiveButton("Yes", (dialog, id) -> {
             dialog.dismiss();;
