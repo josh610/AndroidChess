@@ -3,8 +3,10 @@ package com.example.androidchess;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -29,6 +31,7 @@ import java.util.ArrayList;
  */
 public class Chess extends AppCompatActivity {
 
+    private String gameName;
     private Game game;
     private PlayerPiece prevPiece;
     private PlayerPiece selectedPiece;
@@ -40,7 +43,8 @@ public class Chess extends AppCompatActivity {
     private boolean undoAllowed;
 
     TextView playersMove;
-    Button resign, quit;
+    Button resign, draw;
+    Button undo, ai_move;
 
     //test buttons
     Button win;
@@ -54,7 +58,10 @@ public class Chess extends AppCompatActivity {
 
         playersMove = findViewById(R.id.playersMove);
         resign = findViewById(R.id.resign);
-        quit = findViewById(R.id.quit);
+        draw = findViewById(R.id.draw);
+        undo = findViewById(R.id.undo);
+        ai_move = findViewById(R.id.ai_move);
+
 
         String jsonGames = "";
         Bundle extras = getIntent().getExtras();
@@ -63,13 +70,10 @@ public class Chess extends AppCompatActivity {
         }
         game = new Gson().fromJson(jsonGames, Game.class);
 
-        resign.setOnClickListener(v -> endGame(2));
-        quit.setOnClickListener(v -> quit());
+        resign.setOnClickListener(v -> resignGame());
+        draw.setOnClickListener(v -> drawGamePrompt());
+        undo.setOnClickListener(v -> undoMove());
 
-
-        win = findViewById(R.id.win_game);
-
-        win.setOnClickListener(v -> win());
 
         chess_board = findViewById(R.id.chess_board);
         initializeGame();
@@ -112,7 +116,7 @@ public class Chess extends AppCompatActivity {
         TableRow currRow = (TableRow) v.getParent();
         currFile = currRow.indexOfChild(v);
         currRank = 7 - chess_board.indexOfChild(currRow);
-        System.out.println("currFile: " + currFile + ", currRank: " + currRank);
+        //System.out.println("currFile: " + currFile + ", currRank: " + currRank);
         selectedPiece = currentGameBoard[currFile][currRank];
 
         //add castle to moveset
@@ -129,6 +133,8 @@ public class Chess extends AppCompatActivity {
                 if (!selectedPiece.getColor().equals(game.getCurrPlayer())) {
                     Toast.makeText(Chess.this, "Wrong color", Toast.LENGTH_SHORT).show();
                 } else {
+                    //add en passant to moveset
+                    game.checkForEnPassant(currentGameBoard, selectedPiece, currFile, currRank);
                     pieceSelected = true;
                     updateMoves(true);
                 }
@@ -154,9 +160,7 @@ public class Chess extends AppCompatActivity {
                         }
                         //check for promotion
                         if (prevPiece instanceof Pawn) {
-                            //add en passant to moveset
-                            game.checkForEnPassant(currentGameBoard, prevPiece, prevFile, prevRank);
-                            //showPromotion();
+
                             //if promotionChar == '0', do nothing
 
                             if (prevPiece.getColor().equals("White") && currRank == 7) {
@@ -175,6 +179,7 @@ public class Chess extends AppCompatActivity {
                                 }
                             }
                         }
+
                             movePiece(prevFile, prevRank, currFile, currRank);
                             pieceSelected = false;
                             updateMoves(false);
@@ -184,6 +189,17 @@ public class Chess extends AppCompatActivity {
                 }
                 pieceSelected = false;
                 updateMoves(false);
+                King wKing = (King) game.getwKing();
+                King bKing = (King) game.getbKing();
+                if (wKing.getCheckStatus().equals("Check") || bKing.getCheckStatus().equals("Check")) {
+                    Toast.makeText(Chess.this, "Check", Toast.LENGTH_SHORT).show();
+                } else if (wKing.getCheckStatus().equals("Checkmate")) {
+                    game.setGameStatus(2);
+                    endGame(2);
+                } else if (bKing.getCheckStatus().equals("Checkmate")) {
+                    game.setGameStatus(1);
+                    endGame(1);
+                }
             }
         }
 
@@ -250,7 +266,7 @@ public class Chess extends AppCompatActivity {
         }
     }
     private void movePiece(int prevFile, int prevRank, int currFile, int currRank) {
-        System.out.println("movePiece");
+        //System.out.println("movePiece");
         ArrayList<int[]> wCheckSpaces = game.getwCheckSpaces();
         ArrayList<int[]> bCheckSpaces = game.getbCheckSpaces();
         PlayerPiece wKing = game.getwKing();
@@ -263,8 +279,10 @@ public class Chess extends AppCompatActivity {
         } else {
             if (game.getCurrPlayer().equals("White")) {
                 game.setCurrPlayer("Black");
+                playersMove.setText("Black's Move");
             } else {
                 game.setCurrPlayer("White");
+                playersMove.setText("White's Move");
             }
             undoAllowed = true;
         }
@@ -352,6 +370,45 @@ public class Chess extends AppCompatActivity {
         }
     }
 
+    private void undoMove() {
+        if (undoAllowed) {
+            game.undoMove();
+            updateBoardPieces();
+            updateMoves(false);
+            pieceSelected = false;
+            undoAllowed = false;
+        } else {
+            pieceSelected = false;
+            updateMoves(false);
+            Toast.makeText(Chess.this, "Undo not allowed", Toast.LENGTH_SHORT).show();
+        }
+    }
+    private void resignGame() {
+        pieceSelected = false;
+        updateMoves(false);
+        if (game.getCurrPlayer().equals("White")) {
+            endGame(2);
+        } else {
+            endGame(1);
+        }
+    }
+    private void drawGamePrompt() {
+        pieceSelected = false;
+        updateMoves(false);
+        AlertDialog.Builder builder = new AlertDialog.Builder(Chess.this);
+        builder.setTitle("Draw?");
+        builder.setPositiveButton("Yes", (dialog, id) -> {
+            dialog.dismiss();
+            game.setGameStatus(-1);
+            endGame(-1);
+        });
+        builder.setNegativeButton("No", (dialog, id) -> {
+            dialog.dismiss();
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
     private void quit(){
         showQuitDialog();
     }
@@ -363,7 +420,7 @@ public class Chess extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(Chess.this);
         builder.setTitle("Are you sure?");
         builder.setPositiveButton("Yes", (dialog, id) -> {
-            dialog.dismiss();;
+            dialog.dismiss();
             returnToHome();
         });
         builder.setNegativeButton("No", (dialog, id) -> {
@@ -382,12 +439,21 @@ public class Chess extends AppCompatActivity {
      * or not to save the game
      */
     private void endGame(int endGameCode){
+        System.out.println(game.getMovesList());
+        String prompt = "";
+        if (endGameCode == 1) {
+            prompt = "White wins! ";
+        } else if (endGameCode == 2) {
+            prompt = "Black wins! ";
+        } else if (endGameCode == -1) {
+            prompt = "Draw game. ";
+        }
         AlertDialog.Builder builder = new AlertDialog.Builder(Chess.this);
-        builder.setTitle("You won! Would you like to save this game?");
+        builder.setTitle(prompt+ "Would you like to save this game?");
         builder.setPositiveButton("Yes", (dialog, id) -> {
             dialog.dismiss();;
             saveGame();
-            returnToHome();
+            //returnToHome();
         });
         builder.setNegativeButton("No", (dialog, id) -> {
             dialog.dismiss();
@@ -401,12 +467,25 @@ public class Chess extends AppCompatActivity {
      * Saves game
      */
     private void saveGame(){
-        Intent intent = new Intent(this, SaveGame.class);
-        intent.putExtra(Home.GAME, new Gson().toJson(game));
-        startActivity(intent);
+        AlertDialog.Builder builder = new AlertDialog.Builder(Chess.this);
+        builder.setTitle("Enter game name");
 
-        //Saves state of the application after saving the game
-        Home.saveState();
+        final EditText input = new EditText(Chess.this);
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                gameName = input.getText().toString();
+                game.setName(gameName);
+                SavedGames.addGame(game);
+                dialog.dismiss();
+                returnToHome();
+                Home.saveState();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     /**
@@ -418,10 +497,6 @@ public class Chess extends AppCompatActivity {
         Intent intent = new Intent(this, Home.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
-    }
-
-    private void win(){
-        endGame(1);
     }
 
 }

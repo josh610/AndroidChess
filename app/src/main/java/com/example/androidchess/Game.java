@@ -91,6 +91,7 @@ public class Game implements Serializable {
      * Initializes the board (places pieces where they go for beginning of game)
      */
     public void initBoard(PlayerPiece[][] board) {
+        gameStatus = 0;
         // Black pieces
         board[0][7] = new Rook("Black", 0, 7);
         board[1][7] = new Knight("Black", 1, 7);
@@ -550,7 +551,7 @@ public class Game implements Serializable {
                 if (ep != null && ep instanceof Pawn && ((Pawn) ep).getJustMovedTwo() == true) {
                     p.getMoves(p, board).add(new int[]{currFile + 1, currRank - 1});
                 }
-                if (currFile < 7 && currRank > 0) {
+                if (currFile > 0 && currRank > 0) {
                     ep = board[currFile - 1][currRank];
                 }
                 if (ep != null && ep instanceof Pawn && ((Pawn) ep).getJustMovedTwo() == true) {

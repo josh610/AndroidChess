@@ -54,7 +54,9 @@ public class SavedGames extends AppCompatActivity{
         games = new Gson().fromJson(jsonGames, ArrayList.class);
 
         listView = (ListView) findViewById(R.id.previous_games_list);
-        listView.setAdapter(new ArrayAdapter<Game>(this, R.layout.game, games));
+        if (games != null) {
+            listView.setAdapter(new ArrayAdapter<Game>(this, R.layout.game, games));
+        }
 
         // show game for possible edit when tapped
         listView.setOnItemClickListener((p, V, pos, id) -> editGame(pos));
