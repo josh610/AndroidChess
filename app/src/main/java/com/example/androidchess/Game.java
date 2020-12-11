@@ -35,6 +35,9 @@ public class Game implements Serializable {
      */
     private PlayerPiece[][] board;
     public PlayerPiece[][] getBoard() { return board; }
+
+    private int gameStatus;
+    public void setGameStatus(int status) { gameStatus = status; }
     /**
      * The white king
      */
@@ -61,12 +64,13 @@ public class Game implements Serializable {
     //static Scanner sc;
 
     private String currPlayer = "White";
+    public String getCurrPlayer() { return currPlayer; }
+    public void setCurrPlayer(String player) { currPlayer = player; }
 
     /**
      * Initializes the board (places pieces where they go for beginning of game)
      */
     public void initBoard(PlayerPiece[][] board) {
-        board = new PlayerPiece[8][8];
         // Black pieces
         board[0][7] = new Rook("Black", 0, 7);
         board[1][7] = new Knight("Black", 1, 7);
@@ -490,6 +494,52 @@ public class Game implements Serializable {
         return true;
 
     }
+    public void checkForEnPassant(PlayerPiece[][] board, PlayerPiece p, int currFile, int currRank) {
+        if (p instanceof Pawn) {
+            // check for en passant
+            if (p.getColor().contentEquals("White")) {
+                PlayerPiece ep = board[currFile + 1][currRank];
+                if (ep != null && ep instanceof Pawn && ((Pawn) ep).getJustMovedTwo() == true) {
+                    p.getMoves(p, board).add(new int[] {currFile + 1, currRank + 1});
+                }
+                ep = board[currFile - 1][currRank];
+                if (ep != null && ep instanceof Pawn && ((Pawn) ep).getJustMovedTwo() == true) {
+                    p.getMoves(p, board).add(new int[] {currFile - 1, currRank + 1});
+                }
+            } else {
+                PlayerPiece ep = board[currFile + 1][currRank];
+                if (ep != null && ep instanceof Pawn && ((Pawn) ep).getJustMovedTwo() == true) {
+                    p.getMoves(p, board).add(new int[] {currFile + 1, currRank - 1});
+                }
+                ep = board[currFile - 1][currRank];
+                if (ep != null && ep instanceof Pawn && ((Pawn) ep).getJustMovedTwo() == true) {
+                    p.getMoves(p, board).add(new int[] {currFile - 1, currRank - 1});
+                }
+            }
+        }
+    }
+    public void checkForCastle(PlayerPiece[][] board, ArrayList<int[]> wCheckSpaces, ArrayList<int[]> bCheckSpaces, PlayerPiece wKing, PlayerPiece bKing) {
+        if (!((board[5][0] != null || board[6][0] != null || wKing.hasItMoved() || !(board[7][0] instanceof Rook)
+                || board[7][0].hasItMoved()) || (isInList(wCheckSpaces, wKing.getCoords()) || isInList(wCheckSpaces, new int[] { 5, 0 })
+                || isInList(wCheckSpaces, new int[] { 6, 0 }) || isInList(wCheckSpaces, new int[] { 7, 0 }))) && (wKing.getCoords()[0] == 4 && wKing.getCoords()[1] == 0)) {
+            wKing.getMoves(wKing, board).add(new int[] {6, 0});
+        } else if (!((board[1][0] != null || board[2][0] != null || board[3][0] != null || wKing.hasItMoved()
+                || !(board[0][0] instanceof Rook) || board[0][0].hasItMoved() || isInList(wCheckSpaces, wKing.getCoords()) || isInList(wCheckSpaces, new int[] { 3, 0 })
+                || isInList(wCheckSpaces, new int[] { 2, 0 }) || isInList(wCheckSpaces, new int[] { 1, 0 })
+                || isInList(wCheckSpaces, new int[] { 0, 0 }))) && (wKing.getCoords()[0] == 4 && wKing.getCoords()[1] == 0)) {
+            wKing.getMoves(wKing, board).add(new int[] {2, 0});
+        }
+        if (!(board[5][7] != null || board[6][7] != null || bKing.hasItMoved() || !(board[7][7] instanceof Rook)
+                || board[7][7].hasItMoved() || isInList(bCheckSpaces, bKing.getCoords()) || isInList(bCheckSpaces, new int[] { 5, 7 })
+                || isInList(bCheckSpaces, new int[] { 6, 7 }) || isInList(bCheckSpaces, new int[] { 7, 7 })) && (bKing.getCoords()[0] == 4 && bKing.getCoords()[1] == 7)) {
+            bKing.getMoves(bKing, board).add(new int[] {6, 7});
+        } else if (!(board[1][7] != null || board[2][7] != null || board[3][7] != null || bKing.hasItMoved()
+                || !(board[0][7] instanceof Rook) || board[0][7].hasItMoved() || isInList(bCheckSpaces, bKing.getCoords()) || isInList(wCheckSpaces, new int[] { 3, 7 })
+                || isInList(wCheckSpaces, new int[] { 2, 7 }) || isInList(wCheckSpaces, new int[] { 1, 7 })
+                || isInList(wCheckSpaces, new int[] { 0, 7 })) && (bKing.getCoords()[0] == 4 && bKing.getCoords()[1] == 7)) {
+            bKing.getMoves(bKing, board).add(new int[] {2, 7});
+        }
+    }
 
     /**
      * Updates the check status of the opposing side's king
@@ -752,8 +802,17 @@ public class Game implements Serializable {
         }
         return false;
     }
+    public static String intToMove(int prevRow, int prevCol, int nextRow, int nextCol) {
+        char prevFile = (char) (prevCol + 97);
+        int prevRank = prevRow + 1;
+        char nextFile = (char) (nextCol + 97);
+        int nextRank = nextRow + 1;
+        System.out.println(prevFile + prevRank + " " + nextFile + nextRank);
+        return prevFile + prevRank + " " + nextFile + nextRank;
+    }
+
 
     public String moveToString(String player, String move) {
-        return currPlayer;
+        return player + " " + move;
     }
 }
