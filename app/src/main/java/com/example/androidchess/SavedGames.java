@@ -103,6 +103,7 @@ public class SavedGames extends AppCompatActivity{
         for(int i = 0; i<games.size(); i++){
             if(games.get(i).getName().equals(game.getName())){
                 games.remove(i);
+                return;
             }
         }
     }
