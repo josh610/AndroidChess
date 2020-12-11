@@ -27,7 +27,7 @@ public class Home extends AppCompatActivity implements Serializable{
     public static final String GAME = "game";
     public static final String SAVED_GAMES = "saved_games";
 
-    private static ArrayList<Game> saved_games;
+    private static ArrayList<Game> saved_games = new ArrayList<>();
 
     Button newGame, savedGames;
 
@@ -39,19 +39,19 @@ public class Home extends AppCompatActivity implements Serializable{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        //read current_games and saved_games
+        //read saved_games
         try {
             readApp();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
 
+        Game game = new Game();
+        game.setName("Game 1");
+        saved_games.add(game);
+
         newGame = findViewById(R.id.new_game);
         savedGames = findViewById(R.id.saved_games);
-
-        if(saved_games == null){
-            saved_games = new ArrayList<Game>();
-        }
 
         //Match buttons with their ActionEvents
         newGame.setOnClickListener(v -> startNewGame());

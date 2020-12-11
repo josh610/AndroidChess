@@ -20,7 +20,7 @@ public class SavedGames extends AppCompatActivity{
 
     private ListView listView;
     //ArrayList of finished games
-    private static ArrayList<Game> games = new ArrayList<Game>();
+    private static ArrayList<Game> games;
 
     public static final int RENAME_GAME_CODE = 1;
     public static final int PLAY_GAME_CODE = 2;
