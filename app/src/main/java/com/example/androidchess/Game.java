@@ -495,7 +495,31 @@ public class Game implements Serializable {
         return true;
 
     }
-    public void checkForCastle(PlayerPiece[][] board, ArrayList<int[]> wCheckSpaces, ArrayList<int[]> bCheckSpaces, PlayerPiece wKing, PlayerPiece bKing, String color) {
+    public void checkForEnPassant(PlayerPiece[][] board, PlayerPiece p, int currFile, int currRank) {
+        if (p instanceof Pawn) {
+            // check for en passant
+            if (p.getColor().contentEquals("White")) {
+                PlayerPiece ep = board[currFile + 1][currRank];
+                if (ep != null && ep instanceof Pawn && ((Pawn) ep).getJustMovedTwo() == true) {
+                    p.getMoves(p, board).add(new int[] {currFile + 1, currRank + 1});
+                }
+                ep = board[currFile - 1][currRank];
+                if (ep != null && ep instanceof Pawn && ((Pawn) ep).getJustMovedTwo() == true) {
+                    p.getMoves(p, board).add(new int[] {currFile - 1, currRank + 1});
+                }
+            } else {
+                PlayerPiece ep = board[currFile + 1][currRank];
+                if (ep != null && ep instanceof Pawn && ((Pawn) ep).getJustMovedTwo() == true) {
+                    p.getMoves(p, board).add(new int[] {currFile + 1, currRank - 1});
+                }
+                ep = board[currFile - 1][currRank];
+                if (ep != null && ep instanceof Pawn && ((Pawn) ep).getJustMovedTwo() == true) {
+                    p.getMoves(p, board).add(new int[] {currFile - 1, currRank - 1});
+                }
+            }
+        }
+    }
+    public void checkForCastle(PlayerPiece[][] board, ArrayList<int[]> wCheckSpaces, ArrayList<int[]> bCheckSpaces, PlayerPiece wKing, PlayerPiece bKing) {
         if (!((board[5][0] != null || board[6][0] != null || wKing.hasItMoved() || !(board[7][0] instanceof Rook)
                 || board[7][0].hasItMoved()) || (isInList(wCheckSpaces, wKing.getCoords()) || isInList(wCheckSpaces, new int[] { 5, 0 })
                 || isInList(wCheckSpaces, new int[] { 6, 0 }) || isInList(wCheckSpaces, new int[] { 7, 0 }))) && (wKing.getCoords()[0] == 4 && wKing.getCoords()[1] == 0)) {
@@ -514,7 +538,7 @@ public class Game implements Serializable {
                 || !(board[0][7] instanceof Rook) || board[0][7].hasItMoved() || isInList(bCheckSpaces, bKing.getCoords()) || isInList(wCheckSpaces, new int[] { 3, 7 })
                 || isInList(wCheckSpaces, new int[] { 2, 7 }) || isInList(wCheckSpaces, new int[] { 1, 7 })
                 || isInList(wCheckSpaces, new int[] { 0, 7 })) && (bKing.getCoords()[0] == 4 && bKing.getCoords()[1] == 7)) {
-            bKing.getMoves(bKing, board).add(new int[] {2, 7})
+            bKing.getMoves(bKing, board).add(new int[] {2, 7});
         }
     }
 
