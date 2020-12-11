@@ -16,13 +16,7 @@
         <activity
             android:name=".SaveGame"
             android:label="@string/title_activity_save_game"
-            android:theme="@style/Theme.AndroidChess.NoActionBar"></activity>
-        <activity
-            android:name=".CurrentGames"
-            android:label="@string/title_activity_current_games">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.androidchess.Home" />
+            android:theme="@style/Theme.AndroidChess.NoActionBar">
         </activity>
         <activity
             android:name=".ReplayGame"
@@ -32,10 +26,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.androidchess.EditGame" />
         </activity>
-        <activity
-            android:name=".SaveNewGame"
-            android:label="@string/title_activity_save_new_game"
-            android:theme="@style/Theme.AndroidChess.NoActionBar" />
         <activity
             android:name=".EditGame"
             android:label="@string/title_activity_watch_edit_game"
@@ -50,14 +40,6 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.androidchess.Home" />
-        </activity>
-        <activity
-            android:name=".PlayEditGame"
-            android:label="@string/title_activity_edit_game"
-            android:theme="@style/Theme.AndroidChess.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.androidchess.CurrentGames" />
         </activity>
 
         <uses-library

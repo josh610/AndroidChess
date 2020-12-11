@@ -99,12 +99,12 @@ public class Home extends AppCompatActivity implements Serializable{
      * @throws ClassNotFoundException
      */
     private static void writeApp() throws IOException, ClassNotFoundException{
-        FileOutputStream prev_fos = new FileOutputStream("R.raw.saved_games.txt");
-        ObjectOutputStream prev_oos = new ObjectOutputStream(prev_fos);
+        FileOutputStream fos = new FileOutputStream("savedGames.dat");
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
 
-        prev_oos.writeObject(saved_games);
-        prev_oos.flush();
-        prev_oos.close();
+        oos.writeObject(saved_games);
+        oos.flush();
+        oos.close();
     }
 
     /**
@@ -114,10 +114,10 @@ public class Home extends AppCompatActivity implements Serializable{
      * @throws ClassNotFoundException
      */
     private static void readApp() throws IOException, ClassNotFoundException{
-        FileInputStream prev_fis = new FileInputStream("R.raw.saved_games.txt");
-        ObjectInputStream prev_ois = new ObjectInputStream(prev_fis);
+        FileInputStream fis = new FileInputStream("savedGames.dat");
+        ObjectInputStream ois = new ObjectInputStream(fis);
 
-        saved_games = (ArrayList<Game>) prev_ois.readObject();
-        prev_ois.close();
+        saved_games = (ArrayList<Game>) ois.readObject();
+        ois.close();
     }
 }
