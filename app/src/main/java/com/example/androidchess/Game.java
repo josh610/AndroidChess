@@ -31,14 +31,32 @@ public class Game implements Serializable {
     public void setPlayerMove(String playerMove){
         this.playerMove = playerMove;
     }
+
+    public ArrayList<String> getMovesList() { return moves; }
     /**
      * The chessboard
      */
     private PlayerPiece[][] board;
     public PlayerPiece[][] getBoard() { return board; }
 
+    //0 for in progress, -1 for draw
+    //1 for white win, 2 for black win
     private int gameStatus;
     public void setGameStatus(int status) { gameStatus = status; }
+    public int getGameStatus() { return gameStatus; }
+    public void drawGame() { gameStatus = -1; }
+    public void resignGame() {
+        if (currPlayer.equals("White")) {
+            gameStatus = 2;
+        } else {
+            gameStatus = 1;
+        }
+    }
+
+    private PlayerPiece prevMovedPiece;
+    private PlayerPiece prevDestinationPiece;
+    private String prevMove;
+
     /**
      * The white king
      */
@@ -473,6 +491,14 @@ public class Game implements Serializable {
                 return false;
             }
         }
+
+        //p is current piece
+        //q is destination piece
+        //move contains the current move
+        //need to store moved piece, destination piece, and move
+
+
+
         // move the piece
         board[f2][r2] = p;
         board[f1][r1] = null;
@@ -499,20 +525,30 @@ public class Game implements Serializable {
         if (p instanceof Pawn) {
             // check for en passant
             if (p.getColor().contentEquals("White")) {
-                PlayerPiece ep = board[currFile + 1][currRank];
+                PlayerPiece ep = null;
+                if (currFile < 7 && currRank < 7) {
+                    ep = board[currFile + 1][currRank];
+                }
                 if (ep != null && ep instanceof Pawn && ((Pawn) ep).getJustMovedTwo() == true) {
                     p.getMoves(p, board).add(new int[] {currFile + 1, currRank + 1});
                 }
-                ep = board[currFile - 1][currRank];
+                if (currFile > 0 && currRank < 7) {
+                    ep = board[currFile - 1][currRank];
+                }
                 if (ep != null && ep instanceof Pawn && ((Pawn) ep).getJustMovedTwo() == true) {
                     p.getMoves(p, board).add(new int[] {currFile - 1, currRank + 1});
                 }
             } else {
-                PlayerPiece ep = board[currFile + 1][currRank];
-                if (ep != null && ep instanceof Pawn && ((Pawn) ep).getJustMovedTwo() == true) {
-                    p.getMoves(p, board).add(new int[] {currFile + 1, currRank - 1});
+                PlayerPiece ep = null;
+                if (currFile < 7 && currRank > 0) {
+                    ep = board[currFile + 1][currRank];
                 }
-                ep = board[currFile - 1][currRank];
+                if (ep != null && ep instanceof Pawn && ((Pawn) ep).getJustMovedTwo() == true) {
+                    p.getMoves(p, board).add(new int[]{currFile + 1, currRank - 1});
+                }
+                if (currFile < 7 && currRank > 0) {
+                    ep = board[currFile - 1][currRank];
+                }
                 if (ep != null && ep instanceof Pawn && ((Pawn) ep).getJustMovedTwo() == true) {
                     p.getMoves(p, board).add(new int[] {currFile - 1, currRank - 1});
                 }
@@ -624,6 +660,7 @@ public class Game implements Serializable {
                 }
                 if (bIsCheckmate) {
                     ((King) bKing).setCheckStatus("Checkmate");
+                    gameStatus = 1;
                     System.out.println("Checkmate");
                 } else {
                     // there is at least one move to get the king out of check
@@ -642,6 +679,7 @@ public class Game implements Serializable {
                 }
                 if (wIsCheckmate) {
                     ((King) wKing).setCheckStatus("Checkmate");
+                    gameStatus = 2;
                     System.out.println("Checkmate");
                 } else {
                     // there is at least one move to get the king out of check
@@ -665,6 +703,7 @@ public class Game implements Serializable {
                 boolean bSimulation = pieceProtectSimulation(board, wCheckSpaces, bCheckSpaces, wKing, bKing, "Black");
                 if (bKingUnsafe == bKingMoves && isInList(bCheckSpaces, bKing.getCoords()) && !bSimulation) {
                     ((King) bKing).setCheckStatus("Checkmate");
+                    gameStatus = 1;
                     System.out.println("Checkmate");
                     return;
                 }
@@ -674,6 +713,7 @@ public class Game implements Serializable {
                     return;
                 } else {
                     ((King) bKing).setCheckStatus("Checkmate");
+                    gameStatus = 1;
                     System.out.println("Checkmate");
                     return;
                 }
@@ -692,6 +732,7 @@ public class Game implements Serializable {
                 boolean wSimulation = pieceProtectSimulation(board, wCheckSpaces, bCheckSpaces, wKing, bKing, "White");
                 if (wKingUnsafe == wKingMoves && isInList(wCheckSpaces, wKing.getCoords()) && !wSimulation) {
                     ((King) wKing).setCheckStatus("Checkmate");
+                    gameStatus = 2;
                     System.out.println("Checkmate");
                     return;
                 }
@@ -700,6 +741,7 @@ public class Game implements Serializable {
                     System.out.println("Check");
                 } else {
                     ((King) wKing).setCheckStatus("Checkmate");
+                    gameStatus = 2;
                     System.out.println("Checkmate");
                     return;
                 }
@@ -803,13 +845,17 @@ public class Game implements Serializable {
         }
         return false;
     }
-    public static String intToMove(int prevRow, int prevCol, int nextRow, int nextCol) {
-        char prevFile = (char) (prevCol + 97);
-        int prevRank = prevRow + 1;
-        char nextFile = (char) (nextCol + 97);
-        int nextRank = nextRow + 1;
-        System.out.println(prevFile + prevRank + " " + nextFile + nextRank);
-        return prevFile + prevRank + " " + nextFile + nextRank;
+    public static String intToMove(int f1, int r1, int f2, int r2, char promotion) {
+        char prevFile = (char) (f1 + 97);
+        char prevRank = (char) (r1 + 48 + 1);
+        char nextFile = (char) (f2 + 97);
+        char nextRank = (char) (r2 + 48 + 1);
+        //System.out.println(prevFile + prevRank + " " + nextFile + nextRank);
+        if (promotion == '0') {
+            return "" + prevFile + prevRank + " " + nextFile + nextRank;
+        } else {
+            return "" + prevFile + prevRank + " " + nextFile + nextRank + " " + promotion;
+        }
     }
 
 

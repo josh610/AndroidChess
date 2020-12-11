@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="20dp"
-    android:background="@color/standard_background_color">
+    android:background="@color/standard_background_color"
+    android:theme="@style/Theme.AndroidChess.NoActionBar">
 
     <TextView
         android:id="@+id/playersMove"
@@ -455,13 +456,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:layout_gravity="center"
-        android:paddingTop="70dp">
+        android:layout_gravity="center">
 
         <Button
             android:id="@+id/quit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="@string/quit_label"
             android:textColor="@color/standard_text_color"
             android:fontFamily="@font/standard_font"
@@ -472,24 +473,26 @@
             android:id="@+id/resign"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="@string/resign_label"
             android:textColor="@color/standard_text_color"
             android:fontFamily="@font/standard_font"
             android:backgroundTint="@color/standard_button_color"
             android:onClick="resign"/>
-
-        <Button
+<!-- <Button
             android:id="@+id/test"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0"
             android:backgroundTint="@color/standard_button_color"
-            android:onClick="test"/>
+            android:onClick="test"/> -->
+
 
         <Button
             android:id="@+id/win_game"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="Win"
             android:backgroundTint="@color/standard_button_color"
             android:onClick="win"/>

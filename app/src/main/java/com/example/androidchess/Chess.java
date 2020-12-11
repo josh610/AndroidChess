@@ -1,5 +1,6 @@
 package com.example.androidchess;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -29,15 +30,17 @@ import java.util.ArrayList;
 public class Chess extends AppCompatActivity {
 
     private Game game;
+    private PlayerPiece prevPiece;
     private PlayerPiece selectedPiece;
     private PlayerPiece[][] currentGameBoard = new PlayerPiece[8][8];
     private boolean pieceSelected;
+    private char promotionChar;
 
     TextView playersMove;
     Button resign, quit;
 
     //test buttons
-    Button win, test;
+    Button win;
 
     TableLayout chess_board;
 
@@ -62,10 +65,8 @@ public class Chess extends AppCompatActivity {
 
 
         win = findViewById(R.id.win_game);
-        test = findViewById(R.id.test);
 
         win.setOnClickListener(v -> win());
-        test.setOnClickListener(v -> test());
 
         chess_board = findViewById(R.id.chess_board);
         initializeGame();
@@ -74,7 +75,11 @@ public class Chess extends AppCompatActivity {
 
     private void initializeGame() {
         game.initBoard(currentGameBoard);
+        prevPiece = null;
+        selectedPiece = null;
         pieceSelected = false;
+        promotionChar = '0';
+        updateBoardPieces();
         for (int i = 0; i < 8; i++) {
             TableRow currRow = (TableRow) chess_board.getChildAt(i);
             for (int j = 0; j < 8; j++) {
@@ -89,7 +94,7 @@ public class Chess extends AppCompatActivity {
     }
 
     private void boardClicked(View v) {
-        PlayerPiece prevPiece = selectedPiece;
+        prevPiece = selectedPiece;
         int prevFile = -1;
         int prevRank = -1;
         if (prevPiece != null) {
@@ -100,23 +105,68 @@ public class Chess extends AppCompatActivity {
         int currRank = 0;
         TableRow currRow = (TableRow) v.getParent();
         currFile = currRow.indexOfChild(v);
-        currRank = chess_board.indexOfChild(currRow);
+        currRank = 7 - chess_board.indexOfChild(currRow);
+        System.out.println("currFile: " + currFile + ", currRank: " + currRank);
         selectedPiece = currentGameBoard[currFile][currRank];
-        if (selectedPiece == null) {
+
+        //add castle to moveset
+        game.checkForCastle(currentGameBoard, game.getwCheckSpaces(), game.getbCheckSpaces(), game.getwKing(), game.getbKing());
+
+
+        if (prevPiece == null && selectedPiece == null) {
             Toast.makeText(Chess.this, "Not a valid piece", Toast.LENGTH_SHORT).show();
         } else {
-            if (!pieceSelected) {
+            if (!pieceSelected && selectedPiece == null) {
+                Toast.makeText(Chess.this, "Not a valid piece", Toast.LENGTH_SHORT).show();
+            }
+            if (!pieceSelected && selectedPiece != null) {
                 pieceSelected = true;
                 updateMoves(true);
             } else {
                 //pieceSelected == true
+
+                //same piece - put the piece back down
                 if (prevPiece == selectedPiece) {
                     pieceSelected = false;
                     updateMoves(false);
                 } else {
                     //prevPiece != selectedPiece
+                    //check for valid move
+                    //prevPiece is the location of the currently selected piece
+                    //selectedPiece is the coordinates of the desired move
+
                     if (prevPiece != null) {
-                        //movePiece(prevFile, prevRank, currFile, currRank);
+                        //selected destination not in moveset
+                        if (!Game.isInList(prevPiece.getMoves(prevPiece, currentGameBoard), new int[] {currFile, currRank})) {
+                            selectedPiece = prevPiece;
+                            pieceSelected = true;
+                            Toast.makeText(Chess.this, "Invalid move", Toast.LENGTH_SHORT).show();
+                        }
+                        //check for promotion
+                        if (prevPiece instanceof Pawn) {
+                            //add en passant to moveset
+                            game.checkForEnPassant(currentGameBoard, prevPiece, prevFile, prevRank);
+                            showPromotion();
+                            //if promotionChar == '0', do nothing
+
+                            if (prevPiece.getColor().equals("White") && currRank == 7) {
+                                if (Game.isInList(prevPiece.getMoves(prevPiece, currentGameBoard), new int[] {currFile, currRank})) {
+                                    showPromotion();
+                                    return;
+                                }
+                            } else if (prevPiece.getColor().equals("Black") && currRank == 0) {
+                                if (Game.isInList(prevPiece.getMoves(prevPiece, currentGameBoard), new int[] {currFile, currRank})) {
+                                    showPromotion();
+                                    return;
+                                }
+                            }
+                        }
+                         else {
+                            //selected destination is in moveset, move piece
+                            pieceSelected = false;
+                            updateMoves(false);
+                            updateBoardPieces();
+                        }
                     }
                 }
                 pieceSelected = false;
@@ -125,14 +175,113 @@ public class Chess extends AppCompatActivity {
         }
 
     }
+    private void showPromotion() {
+        char[] promotion = new char[1];
+        promotion[0] = 'Q';
+        String[] promotionOptions = new String[] {
+                "Queen",
+                "Knight",
+                "Bishop",
+                "Rook"
+        };
+        AlertDialog.Builder builder = new AlertDialog.Builder(Chess.this);
+        builder.setTitle("Promotion");
 
+        builder.setSingleChoiceItems(promotionOptions, 0,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case 0:
+                                promotion[0] = 'Q';
+                            case 1:
+                                promotion[0] = 'N';
+                            case 2:
+                                promotion[0] = 'B';
+                            case 3:
+                                promotion[0] = 'R';
+                        }
+                    }
+                })
+                .setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        executePromotion(promotion[0]);
+                        dialog.dismiss();
+                    }
+                })
+                ;
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+    private void executePromotion(char promotion) {
+        promotionChar = promotion;
+        int prevFile = prevPiece.getCoords()[0];
+        int prevRank = prevPiece.getCoords()[1];
+        int currFile = selectedPiece.getCoords()[0];
+        int currRank = selectedPiece.getCoords()[1];
+        String move = Game.intToMove(prevFile, prevRank, currFile, currRank, promotionChar);
+        boolean moved = game.playerMove(currentGameBoard, game.getwCheckSpaces(), game.getbCheckSpaces(), game.getwKing(), game.getbKing(), game.getCurrPlayer(), move);
+
+    }
     private void movePiece(int prevFile, int prevRank, int currFile, int currRank) {
         ArrayList<int[]> wCheckSpaces = game.getwCheckSpaces();
         ArrayList<int[]> bCheckSpaces = game.getbCheckSpaces();
         PlayerPiece wKing = game.getwKing();
         PlayerPiece bKing = game.getbKing();
         String currColor = game.getCurrPlayer();
+        String currMove = Game.intToMove(prevFile, prevRank, currFile, currRank, '0');
         //boolean pieceMoved = game.playerMove(currentGameBoard, wCheckSpaces, bCheckSpaces, wKing, bKing, );
+    }
+
+    private void updateBoardPieces() {
+        for (int i = 0; i < 8; i++) {
+            TableRow currRow = (TableRow) chess_board.getChildAt(i);
+            for (int j = 0; j < 8; j++) {
+                ImageView currView = (ImageView) currRow.getChildAt(7-j);
+                PlayerPiece p = currentGameBoard[j][7-i];
+                if (p == null) {
+                    currView.setImageResource(android.R.color.transparent);
+                } else if (p instanceof Pawn) {
+                    if (p.getColor().equals("White")) {
+                        currView.setImageDrawable(ContextCompat.getDrawable(Chess.this, R.drawable.white_pawn));
+                    } else {
+                        currView.setImageDrawable(ContextCompat.getDrawable(Chess.this, R.drawable.black_pawn));
+                    }
+                } else if (p instanceof Rook) {
+                    if (p.getColor().equals("White")) {
+                        currView.setImageDrawable(ContextCompat.getDrawable(Chess.this, R.drawable.white_rook));
+                    } else {
+                        currView.setImageDrawable(ContextCompat.getDrawable(Chess.this, R.drawable.black_rook));
+                    }
+                } else if (p instanceof Knight) {
+                    if (p.getColor().equals("White")) {
+                        currView.setImageDrawable(ContextCompat.getDrawable(Chess.this, R.drawable.white_knight));
+                    } else {
+                        currView.setImageDrawable(ContextCompat.getDrawable(Chess.this, R.drawable.black_knight));
+                    }
+                } else if (p instanceof Bishop) {
+                    if (p.getColor().equals("White")) {
+                        currView.setImageDrawable(ContextCompat.getDrawable(Chess.this, R.drawable.white_bishop));
+                    } else {
+                        currView.setImageDrawable(ContextCompat.getDrawable(Chess.this, R.drawable.black_bishop));
+                    }
+                } else if (p instanceof Queen) {
+                    if (p.getColor().equals("White")) {
+                        currView.setImageDrawable(ContextCompat.getDrawable(Chess.this, R.drawable.white_queen));
+                    } else {
+                        currView.setImageDrawable(ContextCompat.getDrawable(Chess.this, R.drawable.black_queen));
+                    }
+                } else if (p instanceof King) {
+                    if (p.getColor().equals("White")) {
+                        currView.setImageDrawable(ContextCompat.getDrawable(Chess.this, R.drawable.white_king));
+                    } else {
+                        currView.setImageDrawable(ContextCompat.getDrawable(Chess.this, R.drawable.black_king));
+                    }
+                }
+            }
+        }
     }
 
     private void updateMoves(boolean showMoves) {
@@ -152,7 +301,7 @@ public class Chess extends AppCompatActivity {
         } else {
             ArrayList<int[]> currMoves = selectedPiece.getMoves(selectedPiece, currentGameBoard);
             for (int i = 0; i < 8; i++) {
-                TableRow currRow = (TableRow) chess_board.getChildAt(i);
+                TableRow currRow = (TableRow) chess_board.getChildAt(7-i);
                 for (int j = 0; j < 8; j++) {
                     ImageView currView = (ImageView) currRow.getChildAt(j);
                     int[] temp = {j, i};
@@ -240,10 +389,4 @@ public class Chess extends AppCompatActivity {
         endGame(1);
     }
 
-    private void test(){
-        System.out.println("test");
-        int n = Integer.parseInt(test.getText().toString());
-        n++;
-        test.setText(Integer.toString(n));
-    }
 }
