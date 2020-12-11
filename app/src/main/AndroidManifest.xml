@@ -14,14 +14,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidChess">
         <activity
-            android:name=".SaveGame"
-            android:label="@string/title_activity_save_game"
-            android:theme="@style/Theme.AndroidChess.NoActionBar">
-        </activity>
-        <activity
             android:name=".ReplayGame"
-            android:label="@string/title_activity_replay_game"
-            android:theme="@style/Theme.AndroidChess.NoActionBar">
+            android:label="@string/title_activity_replay_game">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.androidchess.EditGame" />

@@ -12,6 +12,13 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+
+import static com.example.androidchess.Home.CURRENT_GAME;
+import static com.example.androidchess.Home.SAVED_GAMES;
 
 /**
  * Allows user to continue playing selected in-progress game,
@@ -23,6 +30,7 @@ public class EditGame extends AppCompatActivity {
     public static final String GAME_INDEX = "gameIndex";
     public static final String GAME_NAME = "name";
 
+    private ArrayList<Game> gameList;
     private Game game;
     private int gameIndex;
     private EditText rename;
@@ -54,11 +62,15 @@ public class EditGame extends AppCompatActivity {
 
         //read Game object from Json String
         String jsonGames = "";
+        String jsonGameList = "";
         Bundle extras = getIntent().getExtras();
         if(extras != null){
             jsonGames = extras.getString("game");
+            jsonGameList = extras.getString(SAVED_GAMES);
         }
         game = new Gson().fromJson(jsonGames, Game.class);
+        GameList list = new Gson().fromJson(jsonGames, GameList.class);
+        gameList = list.getGameList();
 
         replay.setOnClickListener(v -> replayGame());
         ok.setOnClickListener(v -> saveName());
@@ -81,7 +93,7 @@ public class EditGame extends AppCompatActivity {
      */
     private void replayGame(){
         Intent intent = new Intent(this, ReplayGame.class);
-        intent.putExtra(Home.GAME, new Gson().toJson(game));
+        intent.putExtra(CURRENT_GAME, new Gson().toJson(game));
         startActivity(intent);
     }
 
@@ -93,12 +105,12 @@ public class EditGame extends AppCompatActivity {
         if(newName == null || newName.length() == 0) {
             Toast.makeText(EditGame.this, "Please enter a valid name", Toast.LENGTH_LONG).show();
         }
-        else if(SavedGames.containsName(newName)){
+        else if(SavedGames.containsName(gameList, newName)){
             Toast.makeText(EditGame.this, "A game with this name already exists", Toast.LENGTH_LONG).show();
         }
         else {
             game.setName(rename.getText().toString());
-            SavedGames.addGame(game);
+            SavedGames.addGame(gameList, game);
 
             finish();
         }
@@ -116,7 +128,7 @@ public class EditGame extends AppCompatActivity {
         builder.setTitle("Are you sure?");
         builder.setPositiveButton("Yes", (dialog, id) -> {
             dialog.dismiss();;
-            SavedGames.deleteGame(game);
+            SavedGames.deleteGame(gameList, game);
         });
         builder.setNegativeButton("No", (dialog, id) -> dialog.dismiss());
         AlertDialog dialog = builder.create();

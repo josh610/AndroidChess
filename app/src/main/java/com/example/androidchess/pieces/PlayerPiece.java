@@ -24,6 +24,8 @@ public abstract class PlayerPiece {
      */
     protected boolean hasMoved;
 
+    public PlayerPiece(){
+    }
     /**
      * Creates a PlayerPiece with the specified color and coordinates
      *

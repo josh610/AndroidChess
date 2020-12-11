@@ -4,6 +4,7 @@ import com.example.androidchess.pieces.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -13,7 +14,11 @@ public class Game implements Serializable {
     private ArrayList<String> moves; //Records all moves in the game ("White D2->E4", "Black B1->G7 Queen", "White Resign")
     private String playerMove = "White's move";
 
+
     /** Getter/Setter Methods **/
+
+    public Game() {
+    }
 
     public void setMovesList(ArrayList<String> moves) { this.moves = moves; }
 
@@ -45,8 +50,12 @@ public class Game implements Serializable {
     private int gameStatus;
     public void setGameStatus(int status) { gameStatus = status; }
     public int getGameStatus() { return gameStatus; }
-    public void drawGame() { gameStatus = -1; }
+    public void drawGame() {
+        moves.add("draw");
+        setGameStatus(-1);
+    }
     public void resignGame() {
+        moves.add(currPlayer + " resign");
         if (currPlayer.equals("White")) {
             gameStatus = 2;
         } else {
@@ -87,6 +96,26 @@ public class Game implements Serializable {
     public String getCurrPlayer() { return currPlayer; }
     public void setCurrPlayer(String player) { currPlayer = player; }
 
+
+    public Game(LocalDateTime now) {
+        date = now;
+    }
+    public void setDate(LocalDateTime now) {
+        date = now;
+    }
+    public String toString() {
+        if (name == null || date == null) {
+            return "";
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String dateFormat = "";
+        try {
+            dateFormat = date.format(formatter);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return name + ", " + dateFormat;
+    }
     /**
      * Initializes the board (places pieces where they go for beginning of game)
      */
@@ -145,6 +174,92 @@ public class Game implements Serializable {
         System.out.println();
     }
 
+    public boolean randomMove(PlayerPiece[][] currBoard) {
+        ArrayList<PlayerPiece> colorPieces = new ArrayList<PlayerPiece>();
+        // store all pieces of the current color in the ArrayList colorPieces
+
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (currBoard[i][j] != null) {
+                    if (currBoard[i][j].getColor().contentEquals(currPlayer)) {
+                        colorPieces.add(currBoard[i][j]);
+                    }
+                }
+            }
+        }
+        ArrayList<PlayerPiece> invalidPieces = new ArrayList<PlayerPiece>();
+        for (int i = 0; i < colorPieces.size(); i++) {
+            if (colorPieces.get(i).getMoves(colorPieces.get(i), currBoard).isEmpty()) {
+                invalidPieces.add(colorPieces.get(i));
+            }
+        }
+        colorPieces.removeAll(invalidPieces);
+        PlayerPiece randPiece = colorPieces.get((int)(Math.random()*colorPieces.size()));
+        ArrayList<int[]> possibleMoves = randPiece.getMoves(randPiece, currBoard);
+        ArrayList<int[]> illegalMoves = new ArrayList<int[]>();
+        for (int i = 0; i < possibleMoves.size(); i++) {
+            if (currPlayer.equals("White")) {
+                if (isInList(wCheckSpaces, possibleMoves.get(i))) {
+                    illegalMoves.add(possibleMoves.get(i));
+                }
+            } else {
+                if (isInList(bCheckSpaces, possibleMoves.get(i))) {
+                    illegalMoves.add(possibleMoves.get(i));
+                }
+            }
+        }
+        possibleMoves.removeAll(illegalMoves);
+        if (possibleMoves.isEmpty()) {
+            return false;
+        }
+        int[] randMove = possibleMoves.get((int)(Math.random()*possibleMoves.size()));
+        char[] promotionChars = {
+                'Q',
+                'N',
+                'B',
+                'R'
+        };
+        String move = "";
+        int promotionInt = (int)(Math.random()*4);
+        if (randPiece instanceof Pawn) {
+            if (currPlayer.equals("White") && randMove[1] == 7) {
+                move = intToMove(randPiece.getCoords()[0], randPiece.getCoords()[1], randMove[0], randMove[1], promotionChars[promotionInt]);
+                System.out.println(move);
+                return playerMove(currBoard, wCheckSpaces, bCheckSpaces, wKing, bKing, currPlayer, move);
+            } else if (currPlayer.equals("Black") && randMove[1] == 0) {
+                move = intToMove(randPiece.getCoords()[0], randPiece.getCoords()[1], randMove[0], randMove[1], promotionChars[promotionInt]);
+                System.out.println(move);
+                return playerMove(currBoard, wCheckSpaces, bCheckSpaces, wKing, bKing, currPlayer, move);
+            }
+        } else {
+            move = intToMove(randPiece.getCoords()[0], randPiece.getCoords()[1], randMove[0], randMove[1], '0');
+            System.out.println(move);
+            return playerMove(currBoard, wCheckSpaces, bCheckSpaces, wKing, bKing, currPlayer, move);
+        }
+        return false;
+    }
+    public void executeMove(String move) {
+        if (move.equals("draw")) {
+            setGameStatus(-1);
+        } else {
+            currPlayer = move.substring(0, 4);
+        }
+        String currMove = move.substring(6);
+        if (currMove.equals("resign")) {
+            if (currPlayer.equals("White")) {
+                setGameStatus(2);
+            } else {
+                setGameStatus(1);
+            }
+        } else {
+            playerMove(board, wCheckSpaces, bCheckSpaces, wKing, bKing, currPlayer, currMove);
+            if (currPlayer.equals("White")) {
+                currPlayer = "Black";
+            } else {
+                currPlayer = "White";
+            }
+        }
+    }
     /**
      * Fills the respective CheckSpaces ArrayLists with the spaces that will put the
      * respective kings in check
@@ -835,7 +950,7 @@ public class Game implements Serializable {
         }
         return false;
     }
-    public void undoMove() {
+    public void undoMove(PlayerPiece[][] gameBoard) {
         int[] prevMoveArr = parseMove(prevMove);
         int movedf = prevMoveArr[0];
         int movedr = prevMoveArr[1];
@@ -844,14 +959,21 @@ public class Game implements Serializable {
         //undo promotion
         if (prevMoveArr[4] != 0) {
             PlayerPiece prevPawn = new Pawn(prevMovedPiece.getColor(), movedf, movedr);
-            board[movedf][movedr] = prevPawn;
+            gameBoard[movedf][movedr] = prevPawn;
         } else {
             prevMovedPiece.setCoords(movedf, movedr);
-            board[movedf][movedr] = prevMovedPiece;
+            gameBoard[movedf][movedr] = prevMovedPiece;
         }
-        prevDestinationPiece.setCoords(destf, destr);
-        board[destf][destr] = prevDestinationPiece;
+        if (prevDestinationPiece != null) {
+            prevDestinationPiece.setCoords(destf, destr);
+        }
+        gameBoard[destf][destr] = prevDestinationPiece;
         moves.remove(moves.size()-1);
+        if (currPlayer.equals("White")) {
+            currPlayer = "Black";
+        } else {
+            currPlayer = "White";
+        }
     }
 
     /**

@@ -20,8 +20,14 @@ import androidx.core.content.ContextCompat;
 import com.example.androidchess.pieces.*;
 import com.example.androidchess.Game;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+
+import static com.example.androidchess.Home.CURRENT_GAME;
+import static com.example.androidchess.Home.SAVED_GAMES;
 
 /**
  * Game screen.
@@ -31,6 +37,8 @@ import java.util.ArrayList;
  */
 public class Chess extends AppCompatActivity {
 
+    private GameList list;
+    private ArrayList<Game> gameList;
     private String gameName;
     private Game game;
     private PlayerPiece prevPiece;
@@ -63,16 +71,21 @@ public class Chess extends AppCompatActivity {
         ai_move = findViewById(R.id.ai_move);
 
 
-        String jsonGames = "";
+        String jsonGame = "";
+        String jsonGameList = "";
         Bundle extras = getIntent().getExtras();
         if(extras != null){
-            jsonGames = extras.getString("game");
+            jsonGame = extras.getString(CURRENT_GAME);
+            jsonGameList = extras.getString(SAVED_GAMES);
         }
-        game = new Gson().fromJson(jsonGames, Game.class);
+        game = new Gson().fromJson(jsonGame, Game.class);
+        list = new Gson().fromJson(jsonGameList, GameList.class);
+        gameList = list.getGameList();
 
         resign.setOnClickListener(v -> resignGame());
         draw.setOnClickListener(v -> drawGamePrompt());
         undo.setOnClickListener(v -> undoMove());
+        ai_move.setOnClickListener(v -> aiMove());
 
 
         chess_board = findViewById(R.id.chess_board);
@@ -372,7 +385,9 @@ public class Chess extends AppCompatActivity {
 
     private void undoMove() {
         if (undoAllowed) {
-            game.undoMove();
+            game.undoMove(currentGameBoard);
+            String displayMove = game.getCurrPlayer() + "'s Move";
+            playersMove.setText(displayMove);
             updateBoardPieces();
             updateMoves(false);
             pieceSelected = false;
@@ -383,9 +398,27 @@ public class Chess extends AppCompatActivity {
             Toast.makeText(Chess.this, "Undo not allowed", Toast.LENGTH_SHORT).show();
         }
     }
+    private void aiMove() {
+        boolean moved = game.randomMove(currentGameBoard);
+        int moveCounter = 0;
+        if (!moved) {
+            Toast.makeText(Chess.this, "Couldn't find legal move", Toast.LENGTH_SHORT).show();
+        } else {
+            updateBoardPieces();
+            if (game.getCurrPlayer().equals("White")) {
+                game.setCurrPlayer("Black");
+            } else {
+                game.setCurrPlayer("White");
+            }
+            String displayMove = game.getCurrPlayer() + "'s Move";
+            playersMove.setText(displayMove);
+            undoAllowed = true;
+        }
+    }
     private void resignGame() {
         pieceSelected = false;
         updateMoves(false);
+        game.resignGame();
         if (game.getCurrPlayer().equals("White")) {
             endGame(2);
         } else {
@@ -400,6 +433,7 @@ public class Chess extends AppCompatActivity {
         builder.setPositiveButton("Yes", (dialog, id) -> {
             dialog.dismiss();
             game.setGameStatus(-1);
+            game.drawGame();
             endGame(-1);
         });
         builder.setNegativeButton("No", (dialog, id) -> {
@@ -409,26 +443,6 @@ public class Chess extends AppCompatActivity {
         dialog.show();
     }
 
-    private void quit(){
-        showQuitDialog();
-    }
-
-    /**
-     * bhdebjcebrfnc
-     */
-    private void showQuitDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(Chess.this);
-        builder.setTitle("Are you sure?");
-        builder.setPositiveButton("Yes", (dialog, id) -> {
-            dialog.dismiss();
-            returnToHome();
-        });
-        builder.setNegativeButton("No", (dialog, id) -> {
-            dialog.dismiss();
-        });
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
 
     /**
      * End of game. Win, draw, resign, etc
@@ -439,6 +453,7 @@ public class Chess extends AppCompatActivity {
      * or not to save the game
      */
     private void endGame(int endGameCode){
+        game.setDate(LocalDateTime.now());
         System.out.println(game.getMovesList());
         String prompt = "";
         if (endGameCode == 1) {
@@ -478,10 +493,13 @@ public class Chess extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 gameName = input.getText().toString();
                 game.setName(gameName);
-                SavedGames.addGame(game);
+                gameList.add(game);
+                if (!list.getGameList().contains(game)) {
+                    list.getGameList().add(game);
+                }
                 dialog.dismiss();
                 returnToHome();
-                Home.saveState();
+                Home.saveState(getApplicationContext());
             }
         });
         AlertDialog dialog = builder.create();
@@ -495,6 +513,7 @@ public class Chess extends AppCompatActivity {
         System.out.println("Returning to home screen");
         //Clear back stack (?)
         Intent intent = new Intent(this, Home.class);
+        intent.putExtra(SAVED_GAMES, new Gson().toJson(list));
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }

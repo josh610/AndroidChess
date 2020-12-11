@@ -8,8 +8,14 @@ import android.widget.ListView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+
+import static com.example.androidchess.Home.CURRENT_GAME;
+import static com.example.androidchess.Home.SAVED_GAMES;
 
 /**
  * List of in-progress games.
@@ -18,9 +24,10 @@ import java.util.ArrayList;
 
 public class SavedGames extends AppCompatActivity{
 
+    private GameList list;
     private ListView listView;
     //ArrayList of finished games
-    private static ArrayList<Game> games;
+    private ArrayList<Game> games;
 
     public static final int RENAME_GAME_CODE = 1;
     public static final int PLAY_GAME_CODE = 2;
@@ -49,18 +56,35 @@ public class SavedGames extends AppCompatActivity{
         String jsonGames = "";
         Bundle extras = getIntent().getExtras();
         if(extras != null){
-            jsonGames = extras.getString("previous_games");
+            jsonGames = extras.getString(SAVED_GAMES);
         }
-        games = new Gson().fromJson(jsonGames, ArrayList.class);
-
+        list = new Gson().fromJson(jsonGames, GameList.class);
+        games = list.getGameList();
         listView = (ListView) findViewById(R.id.previous_games_list);
         if (games != null) {
             listView.setAdapter(new ArrayAdapter<Game>(this, R.layout.game, games));
         }
 
         // show game for possible edit when tapped
-        listView.setOnItemClickListener((p, V, pos, id) -> editGame(pos));
+        // listView.setOnItemClickListener((p, V, pos, id) -> editGame(pos));
+        listView.setOnItemClickListener((p, V, pos, id) -> goToReplay(pos));
     }
+
+
+    private void goToReplay(int pos) {
+        Game replayGame = games.get(pos);
+        Intent intent = new Intent(this, ReplayGame.class);
+        intent.putExtra(CURRENT_GAME, new Gson().toJson(new Game(LocalDateTime.now())));
+        intent.putExtra(SAVED_GAMES, new Gson().toJson(list));
+        startActivity(intent);
+    }
+
+
+
+
+
+
+
 
     /**
      * Shows info for selected game including option to play, rename, or delete
@@ -74,17 +98,19 @@ public class SavedGames extends AppCompatActivity{
         bundle.putString(EditGame.GAME_NAME, game.getName());
         Intent intent = new Intent(this, EditGame.class);
         intent.putExtras(bundle);
+        intent.putExtra(SAVED_GAMES, new Gson().toJson(list));
         startActivityForResult(intent, RENAME_GAME_CODE);
     }
+
 
     /**
      * Search list for game of the same name.
      * @param name
      * @return
      */
-    public static boolean containsName(String name){
-        for(int i = 0; i<games.size(); i++){
-            if(games.get(i).getName().equals(name)){
+    public static boolean containsName(ArrayList<Game> gameList, String name){
+        for(int i = 0; i<gameList.size(); i++){
+            if(gameList.get(i).getName().equals(name)){
                 return true;
             }
         }
@@ -97,14 +123,14 @@ public class SavedGames extends AppCompatActivity{
      * or to update the saved state of a game
      * @param game
      */
-    public static void addGame(Game game){
-        games.add(game);
+    public static void addGame(ArrayList<Game> gameList, Game game){
+        gameList.add(game);
     }
 
-    public static void deleteGame(Game game){
-        for(int i = 0; i<games.size(); i++){
-            if(games.get(i).getName().equals(game.getName())){
-                games.remove(i);
+    public static void deleteGame(ArrayList<Game> gameList, Game game){
+        for(int i = 0; i<gameList.size(); i++){
+            if(gameList.get(i).getName().equals(game.getName())){
+                gameList.remove(i);
                 return;
             }
         }
