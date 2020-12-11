@@ -126,8 +126,12 @@ public class Chess extends AppCompatActivity {
                 Toast.makeText(Chess.this, "Not a valid piece", Toast.LENGTH_SHORT).show();
             }
             if (!pieceSelected && selectedPiece != null) {
-                pieceSelected = true;
-                updateMoves(true);
+                if (!selectedPiece.getColor().equals(game.getCurrPlayer())) {
+                    Toast.makeText(Chess.this, "Wrong color", Toast.LENGTH_SHORT).show();
+                } else {
+                    pieceSelected = true;
+                    updateMoves(true);
+                }
             } else {
                 //pieceSelected == true
 
@@ -234,8 +238,16 @@ public class Chess extends AppCompatActivity {
         boolean moved = game.playerMove(currentGameBoard, game.getwCheckSpaces(), game.getbCheckSpaces(), game.getwKing(), game.getbKing(), game.getCurrPlayer(), move);
         if (!moved) {
             Toast.makeText(Chess.this, "Invalid move", Toast.LENGTH_SHORT).show();
+        } else {
+            if (game.getCurrPlayer().equals("White")) {
+                game.setCurrPlayer("Black");
+                playersMove.setText("Black's Move");
+            } else {
+                game.setCurrPlayer("White");
+                playersMove.setText("White's Move");
+            }
+            undoAllowed = true;
         }
-        undoAllowed = true;
     }
     private void movePiece(int prevFile, int prevRank, int currFile, int currRank) {
         System.out.println("movePiece");
@@ -248,16 +260,22 @@ public class Chess extends AppCompatActivity {
         boolean pieceMoved = game.playerMove(currentGameBoard, wCheckSpaces, bCheckSpaces, wKing, bKing, currColor, currMove);
         if (!pieceMoved) {
             Toast.makeText(Chess.this, "Invalid move", Toast.LENGTH_SHORT).show();
+        } else {
+            if (game.getCurrPlayer().equals("White")) {
+                game.setCurrPlayer("Black");
+            } else {
+                game.setCurrPlayer("White");
+            }
+            undoAllowed = true;
         }
-        undoAllowed = true;
     }
 
     private void updateBoardPieces() {
         for (int i = 0; i < 8; i++) {
-            TableRow currRow = (TableRow) chess_board.getChildAt(i);
+            TableRow currRow = (TableRow) chess_board.getChildAt(7-i);
             for (int j = 0; j < 8; j++) {
-                ImageView currView = (ImageView) currRow.getChildAt(7-j);
-                PlayerPiece p = currentGameBoard[j][7-i];
+                ImageView currView = (ImageView) currRow.getChildAt(j);
+                PlayerPiece p = currentGameBoard[j][i];
                 if (p == null) {
                     currView.setImageResource(android.R.color.transparent);
                 } else if (p instanceof Pawn) {
