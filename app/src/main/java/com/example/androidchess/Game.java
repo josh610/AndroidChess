@@ -15,6 +15,8 @@ public class Game implements Serializable {
 
     /** Getter/Setter Methods **/
 
+    public void setMovesList(ArrayList<String> moves) { this.moves = moves; }
+
     public String getName(){
         return name;
     }
@@ -495,7 +497,10 @@ public class Game implements Serializable {
         //q is destination piece
         //move contains the current move
         //need to store moved piece, destination piece, and move
-
+        prevMovedPiece = p;
+        prevDestinationPiece = q;
+        prevMove = move;
+        moves.add(moveToString(currPlayer, move));
 
 
         // move the piece
@@ -829,6 +834,24 @@ public class Game implements Serializable {
         }
         return false;
     }
+    public void undoMove() {
+        int[] prevMoveArr = parseMove(prevMove);
+        int movedf = prevMoveArr[0];
+        int movedr = prevMoveArr[1];
+        int destf = prevMoveArr[2];
+        int destr = prevMoveArr[3];
+        //undo promotion
+        if (prevMoveArr[4] != 0) {
+            PlayerPiece prevPawn = new Pawn(prevMovedPiece.getColor(), movedf, movedr);
+            board[movedf][movedr] = prevPawn;
+        } else {
+            prevMovedPiece.setCoords(movedf, movedr);
+            board[movedf][movedr] = prevMovedPiece;
+        }
+        prevDestinationPiece.setCoords(destf, destr);
+        board[destf][destr] = prevDestinationPiece;
+        moves.remove(moves.size()-1);
+    }
 
     /**
      * Helper method to determine if an int[] is in a given ArrayList of int[]s
@@ -856,7 +879,6 @@ public class Game implements Serializable {
             return "" + prevFile + prevRank + " " + nextFile + nextRank + " " + promotion;
         }
     }
-
 
     public String moveToString(String player, String move) {
         return player + " " + move;

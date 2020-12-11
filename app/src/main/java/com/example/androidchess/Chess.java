@@ -32,9 +32,12 @@ public class Chess extends AppCompatActivity {
     private Game game;
     private PlayerPiece prevPiece;
     private PlayerPiece selectedPiece;
+    private ArrayList<String> currentGameMoves = new ArrayList<String>();
     private PlayerPiece[][] currentGameBoard = new PlayerPiece[8][8];
     private boolean pieceSelected;
     private char promotionChar;
+    private int[] promotionCoords;
+    private boolean undoAllowed;
 
     TextView playersMove;
     Button resign, quit;
@@ -75,10 +78,13 @@ public class Chess extends AppCompatActivity {
 
     private void initializeGame() {
         game.initBoard(currentGameBoard);
+        game.setMovesList(currentGameMoves);
         prevPiece = null;
         selectedPiece = null;
         pieceSelected = false;
+        undoAllowed = false;
         promotionChar = '0';
+        promotionCoords = new int[2];
         updateBoardPieces();
         for (int i = 0; i < 8; i++) {
             TableRow currRow = (TableRow) chess_board.getChildAt(i);
@@ -146,27 +152,30 @@ public class Chess extends AppCompatActivity {
                         if (prevPiece instanceof Pawn) {
                             //add en passant to moveset
                             game.checkForEnPassant(currentGameBoard, prevPiece, prevFile, prevRank);
-                            showPromotion();
+                            //showPromotion();
                             //if promotionChar == '0', do nothing
 
                             if (prevPiece.getColor().equals("White") && currRank == 7) {
                                 if (Game.isInList(prevPiece.getMoves(prevPiece, currentGameBoard), new int[] {currFile, currRank})) {
+                                    promotionCoords[0] = currFile;
+                                    promotionCoords[1] = currRank;
                                     showPromotion();
                                     return;
                                 }
                             } else if (prevPiece.getColor().equals("Black") && currRank == 0) {
                                 if (Game.isInList(prevPiece.getMoves(prevPiece, currentGameBoard), new int[] {currFile, currRank})) {
+                                    promotionCoords[0] = currFile;
+                                    promotionCoords[1] = currRank;
                                     showPromotion();
                                     return;
                                 }
                             }
                         }
-                         else {
-                            //selected destination is in moveset, move piece
+                            movePiece(prevFile, prevRank, currFile, currRank);
                             pieceSelected = false;
                             updateMoves(false);
                             updateBoardPieces();
-                        }
+
                     }
                 }
                 pieceSelected = false;
@@ -219,20 +228,28 @@ public class Chess extends AppCompatActivity {
         promotionChar = promotion;
         int prevFile = prevPiece.getCoords()[0];
         int prevRank = prevPiece.getCoords()[1];
-        int currFile = selectedPiece.getCoords()[0];
-        int currRank = selectedPiece.getCoords()[1];
+        int currFile = promotionCoords[0];
+        int currRank = promotionCoords[1];
         String move = Game.intToMove(prevFile, prevRank, currFile, currRank, promotionChar);
         boolean moved = game.playerMove(currentGameBoard, game.getwCheckSpaces(), game.getbCheckSpaces(), game.getwKing(), game.getbKing(), game.getCurrPlayer(), move);
-
+        if (!moved) {
+            Toast.makeText(Chess.this, "Invalid move", Toast.LENGTH_SHORT).show();
+        }
+        undoAllowed = true;
     }
     private void movePiece(int prevFile, int prevRank, int currFile, int currRank) {
+        System.out.println("movePiece");
         ArrayList<int[]> wCheckSpaces = game.getwCheckSpaces();
         ArrayList<int[]> bCheckSpaces = game.getbCheckSpaces();
         PlayerPiece wKing = game.getwKing();
         PlayerPiece bKing = game.getbKing();
         String currColor = game.getCurrPlayer();
         String currMove = Game.intToMove(prevFile, prevRank, currFile, currRank, '0');
-        //boolean pieceMoved = game.playerMove(currentGameBoard, wCheckSpaces, bCheckSpaces, wKing, bKing, );
+        boolean pieceMoved = game.playerMove(currentGameBoard, wCheckSpaces, bCheckSpaces, wKing, bKing, currColor, currMove);
+        if (!pieceMoved) {
+            Toast.makeText(Chess.this, "Invalid move", Toast.LENGTH_SHORT).show();
+        }
+        undoAllowed = true;
     }
 
     private void updateBoardPieces() {
