@@ -17,7 +17,7 @@ public class ReplayGame extends AppCompatActivity {
     private ArrayList<String> moves;
 
     TextView playerMove;
-    Button prevMove, nextMove;
+    Button nextMove;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +28,6 @@ public class ReplayGame extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         playerMove = findViewById(R.id.player_move);
-        prevMove = findViewById(R.id.previous_move);
         nextMove = findViewById(R.id.next_move);
 
         //read Game object from Json String
@@ -39,15 +38,9 @@ public class ReplayGame extends AppCompatActivity {
         }
         game = new Gson().fromJson(jsonGames, Game.class);
 
-        prevMove.setOnClickListener(v -> showPreviousMove());
         nextMove.setOnClickListener(v -> showNextMove());
     }
 
-    private void showPreviousMove(){
-
-        updatePlayerMove();
-        //TODO
-    }
 
     private void showNextMove(){
 

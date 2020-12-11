@@ -24,7 +24,7 @@
 
         <Button
             android:id="@+id/next_move"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/next_move_label"
             android:textColor="@color/standard_text_color"
@@ -33,16 +33,6 @@
             android:layout_alignParentStart="true"
             android:onClick="nextMove"/>
 
-        <Button
-            android:id="@+id/previous_move"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/prev_move_label"
-            android:textColor="@color/standard_text_color"
-            android:fontFamily="@font/standard_font"
-            android:backgroundTint="@color/standard_button_color"
-            android:layout_alignParentEnd="true"
-            android:onClick="prevMove"/>
 
     </RelativeLayout>
 
