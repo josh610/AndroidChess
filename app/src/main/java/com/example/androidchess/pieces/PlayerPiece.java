@@ -12,6 +12,7 @@ import java.util.ArrayList;
  * @author Joshua Zimmerman
  */
 public class PlayerPiece implements Serializable {
+    private static final long serialVersionUID = -2662113223223686224L;
     /**
      * The coordinates of this piece
      */

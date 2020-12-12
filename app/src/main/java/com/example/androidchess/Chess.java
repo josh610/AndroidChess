@@ -494,17 +494,22 @@ public class Chess extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 gameName = input.getText().toString();
-                game.setName(gameName);
-                gameList.add(game);
-                if (!list.getGameList().contains(game)) {
-                    list.getGameList().add(game);
-                }
-                dialog.dismiss();
-                returnToHome();
-                try {
-                    Home.writeApp(getApplicationContext(), list);
-                } catch (IOException | ClassNotFoundException e) {
-                    e.printStackTrace();
+                if (gameName.isEmpty()) {
+                    Toast.makeText(Chess.this, "Please enter a game name", Toast.LENGTH_SHORT).show();
+                } else {
+                    game.setName(gameName);
+                    gameList.add(game);
+                    if (!list.getGameList().contains(game)) {
+                        list.getGameList().add(game);
+                    }
+                    list.setGameList(gameList);
+                    dialog.dismiss();
+                    returnToHome();
+                    try {
+                        Home.writeApp(getApplicationContext(), list);
+                    } catch (IOException | ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });

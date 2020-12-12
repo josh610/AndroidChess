@@ -1,14 +1,16 @@
 package com.example.androidchess.pieces;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.function.BiFunction;
 
 public class Queen extends PlayerPiece {
+    private static final long serialVersionUID = 1614294241631903463L;
     /**
      * Determines the valid moves for this queen
      */
-    BiFunction<PlayerPiece, PlayerPiece[][], ArrayList<int[]>> p = (p, board) -> {
+    BiFunction<PlayerPiece, PlayerPiece[][], ArrayList<int[]>> p = (BiFunction<PlayerPiece, PlayerPiece[][], ArrayList<int[]>> & Serializable) (p, board) -> {
         int[] coords = p.getCoords();
         int F = coords[0];
         int R = coords[1];

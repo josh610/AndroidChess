@@ -60,6 +60,7 @@ public class ReplayGame extends AppCompatActivity {
             jsonGameList = extras.getString(SAVED_GAMES);
         }
         game = new Gson().fromJson(jsonGame, Game.class);
+        game.setGameStatus(0);
         GameList list = new Gson().fromJson(jsonGameList, GameList.class);
         gameList = list.getGameList();
         moves = game.getMovesList();
@@ -73,7 +74,7 @@ public class ReplayGame extends AppCompatActivity {
 
 
     private void showNextMove(){
-        if (moveIndex >= game.getMovesList().size()) {
+        if (game.getGameStatus() != 0 || moveIndex >= game.getMovesList().size()) {
             Toast.makeText(ReplayGame.this, "No moves left", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -89,6 +90,13 @@ public class ReplayGame extends AppCompatActivity {
     }
 
     private void updateBoard() {
+        if (game.getGameStatus() == -1) {
+            playerMove.setText("Draw game");
+        } else if (game.getGameStatus() == 1) {
+            playerMove.setText("White wins");
+        } else if (game.getGameStatus() == 2) {
+            playerMove.setText("Black wins");
+        }
         for (int i = 0; i < 8; i++) {
             TableRow currRow = (TableRow) replay_chess_board.getChildAt(7-i);
             for (int j = 0; j < 8; j++) {

@@ -25,13 +25,14 @@ import java.util.ArrayList;
  * game, or view a previous game.
  */
 
-public class Home extends AppCompatActivity implements Serializable{
+public class Home extends AppCompatActivity {
+
 
     public static final String CURRENT_GAME = "game_in_progress";
     public static final String SAVED_GAMES = "saved_games";
 
     private static ArrayList<Game> saved_games = new ArrayList<>();
-    private static GameList list = new GameList();
+    private static GameList list;
 
     Button newGame, savedGames;
 
@@ -48,13 +49,15 @@ public class Home extends AppCompatActivity implements Serializable{
             readApp(getApplicationContext());
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
+            list = new GameList();
+            saved_games = new ArrayList<Game>();
+            list.setGameList(saved_games);
         }
 
-        Game game = new Game();
-        game.setName("Game 1");
-        game.setDate(LocalDateTime.now());
-        saved_games.add(game);
-        list.setGameList(saved_games);
+        //Game game = new Game();
+        //game.setName("Game 1");
+        //game.setDate(LocalDateTime.now());
+        //saved_games.add(game);
         String jsonGameList = "";
         Bundle extras = getIntent().getExtras();
         if(extras != null){
@@ -69,11 +72,7 @@ public class Home extends AppCompatActivity implements Serializable{
         //Match buttons with their ActionEvents
         newGame.setOnClickListener(v -> startNewGame());
         savedGames.setOnClickListener(v -> showSavedGames());
-        try {
-            System.out.println(this.getFilesDir().getCanonicalPath());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
     }
 
     /**
@@ -123,7 +122,7 @@ public class Home extends AppCompatActivity implements Serializable{
         FileOutputStream fos = context.openFileOutput("saved_games.dat", MODE_APPEND);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
 
-        oos.writeObject(list.getGameList());
+        oos.writeObject(list);
         oos.flush();
         oos.close();
     }
@@ -138,8 +137,8 @@ public class Home extends AppCompatActivity implements Serializable{
         FileInputStream fis = context.openFileInput("saved_games.dat");
         ObjectInputStream ois = new ObjectInputStream(fis);
 
-        saved_games = (ArrayList<Game>) ois.readObject();
-        list.setGameList(saved_games);
+        list = (GameList) ois.readObject();
+        saved_games = list.getGameList();
         ois.close();
     }
 }

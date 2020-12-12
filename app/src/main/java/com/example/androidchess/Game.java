@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Game implements Serializable {
+    private static final long serialVersionUID = 7767465315526806251L;
     private String name;
     private String date;
     private ArrayList<String> moves; //Records all moves in the game ("White D2->E4", "Black B1->G7 Queen", "White Resign")
@@ -106,6 +107,10 @@ public class Game implements Serializable {
             e.printStackTrace();
         }
 
+    }
+    public LocalDateTime getLocalDateTime() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return LocalDateTime.parse(date, formatter);
     }
     public void setDate(LocalDateTime now) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");

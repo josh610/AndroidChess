@@ -14,7 +14,7 @@
         android:textSize="40sp"
         android:textColor="@color/standard_text_color"
         android:fontFamily="@font/standard_font"
-        android:text="White's move"
+        android:text="Replaying Game"
         android:layout_gravity="center"/>
 
     <RelativeLayout

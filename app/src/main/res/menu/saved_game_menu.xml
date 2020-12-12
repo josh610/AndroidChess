@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.androidchess.SavedGames">
+    <item
+        android:id="@+id/games_sort"
+        android:title="Sort Games"
+        android:icon="@drawable/ic_game_sort_date"
+        app:showAsAction="always" />
+
+</menu>

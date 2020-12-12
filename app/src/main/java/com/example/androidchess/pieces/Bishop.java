@@ -1,5 +1,6 @@
 package com.example.androidchess.pieces;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.function.BiFunction;
 
@@ -10,10 +11,11 @@ import java.util.function.BiFunction;
  * @author Joshua Zimmerman
  */
 public class Bishop extends PlayerPiece {
+    private static final long serialVersionUID = 5108707922898809317L;
     /**
      * Determines the valid moves for this bishop
      */
-    BiFunction<PlayerPiece, PlayerPiece[][], ArrayList<int[]>> p = (p, board) -> {
+    BiFunction<PlayerPiece, PlayerPiece[][], ArrayList<int[]>> p = (BiFunction<PlayerPiece, PlayerPiece[][], ArrayList<int[]>> & Serializable) (p, board) -> {
         int[] coords = p.getCoords();
         int F = coords[0];
         int R = coords[1];

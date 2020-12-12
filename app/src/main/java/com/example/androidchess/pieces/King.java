@@ -1,10 +1,12 @@
 package com.example.androidchess.pieces;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.function.BiFunction;
 
 public class King extends PlayerPiece {
+    private static final long serialVersionUID = -796312892957597023L;
     /**
      * Represents the current status of this king
      */
@@ -12,7 +14,7 @@ public class King extends PlayerPiece {
     /**
      * Determines the valid moves for this king
      */
-    BiFunction<PlayerPiece, PlayerPiece[][], ArrayList<int[]>> p = (p, board) -> {
+    BiFunction<PlayerPiece, PlayerPiece[][], ArrayList<int[]>> p = (BiFunction<PlayerPiece, PlayerPiece[][], ArrayList<int[]>> & Serializable)(p, board) -> {
         int[] coords = p.getCoords();
         int F = coords[0];
         int R = coords[1];
@@ -52,6 +54,7 @@ public class King extends PlayerPiece {
         return moves;
 
     };
+
 
     /**
      * Creates a King with the specified color and coordinates

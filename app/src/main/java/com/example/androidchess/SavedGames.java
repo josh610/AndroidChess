@@ -2,10 +2,14 @@ package com.example.androidchess;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -29,7 +33,8 @@ public class SavedGames extends AppCompatActivity{
     private ListView listView;
     //ArrayList of finished games
     private ArrayList<Game> games;
-
+    private MenuItem sortButton;
+    private String sortMode = "date";
     public static final int RENAME_GAME_CODE = 1;
     public static final int PLAY_GAME_CODE = 2;
 
@@ -49,7 +54,6 @@ public class SavedGames extends AppCompatActivity{
         setContentView(R.layout.activity_saved_games);
 
         //activate up arrow to Home
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         listView = (ListView) findViewById(R.id.previous_games_list);
@@ -86,8 +90,46 @@ public class SavedGames extends AppCompatActivity{
         startActivity(intent);
     }
 
-
-
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.saved_game_menu,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        sortButton = item;
+        switch (item.getItemId()) {
+            case R.id.games_sort:
+                changeSort();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    private void changeSort() {
+        if (sortMode == null) {
+            sortMode = "date";
+            sortButton.setIcon(ContextCompat.getDrawable(SavedGames.this, R.drawable.ic_game_sort_date));
+        } else if (sortMode.equals("date")){
+            sortMode = "name";
+            sortButton.setIcon(ContextCompat.getDrawable(SavedGames.this, R.drawable.ic_game_sort_name));
+        } else {
+            sortMode = "date";
+            sortButton.setIcon(ContextCompat.getDrawable(SavedGames.this, R.drawable.ic_game_sort_date));
+        }
+        updateSort();
+    }
+    private void updateSort() {
+        ArrayList<Game> sortedGamesList = new ArrayList<Game>(games);
+        if (sortMode.equals("date")) {
+            //sort by date
+            sortedGamesList.sort((Game g1, Game g2) -> g1.getLocalDateTime().compareTo(g2.getLocalDateTime()));
+        } else if (sortMode.equals("name")) {
+            //sort by name
+            sortedGamesList.sort((Game g1, Game g2) -> g1.getName().compareTo(g2.getName()));
+        }
+        listView.setAdapter(new ArrayAdapter<Game>(this, R.layout.game, sortedGamesList));
+    }
 
 
 
@@ -98,6 +140,7 @@ public class SavedGames extends AppCompatActivity{
      * Starts EditGame activity
      * @param pos position of game in ArrayList/ListView
      */
+    /*
     private void editGame(int pos){
         Bundle bundle = new Bundle();
         Game game = games.get(pos);
@@ -108,7 +151,7 @@ public class SavedGames extends AppCompatActivity{
         intent.putExtra(SAVED_GAMES, new Gson().toJson(list));
         startActivityForResult(intent, RENAME_GAME_CODE);
     }
-
+*/
 
     /**
      * Search list for game of the same name.
