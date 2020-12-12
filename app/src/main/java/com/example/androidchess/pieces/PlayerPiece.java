@@ -1,6 +1,7 @@
 package com.example.androidchess.pieces;
 
 
+import java.io.Serializable;
 import java.util.function.BiFunction;
 import java.util.ArrayList;
 
@@ -10,7 +11,7 @@ import java.util.ArrayList;
  * @author Fionna Zhang
  * @author Joshua Zimmerman
  */
-public class PlayerPiece {
+public class PlayerPiece implements Serializable {
     /**
      * The coordinates of this piece
      */

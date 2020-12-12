@@ -33,6 +33,7 @@ public class ReplayGame extends AppCompatActivity {
     private Game game;
     private ArrayList<String> moves;
     private ArrayList<Game> gameList;
+    private PlayerPiece[][] replayGameBoard = new PlayerPiece[8][8];
     private int moveIndex;
     TextView playerMove;
     Button nextMove;
@@ -61,6 +62,10 @@ public class ReplayGame extends AppCompatActivity {
         game = new Gson().fromJson(jsonGame, Game.class);
         GameList list = new Gson().fromJson(jsonGameList, GameList.class);
         gameList = list.getGameList();
+        moves = game.getMovesList();
+        game.setBoard(replayGameBoard);
+        game.initBoard(replayGameBoard);
+
 
         nextMove.setOnClickListener(v -> showNextMove());
         moveIndex = 0;
@@ -72,8 +77,13 @@ public class ReplayGame extends AppCompatActivity {
             Toast.makeText(ReplayGame.this, "No moves left", Toast.LENGTH_SHORT).show();
             return;
         }
+        game.executeMove(replayGameBoard, game.getMovesList().get(moveIndex));
+        if (game.getCurrPlayer().equals("White")) {
+            game.setCurrPlayer("Black");
+        } else {
+            game.setCurrPlayer("White");
+        }
         updatePlayerMove();
-        game.executeMove(game.getMovesList().get(moveIndex));
         updateBoard();
         moveIndex++;
     }
@@ -83,7 +93,7 @@ public class ReplayGame extends AppCompatActivity {
             TableRow currRow = (TableRow) replay_chess_board.getChildAt(7-i);
             for (int j = 0; j < 8; j++) {
                 ImageView currView = (ImageView) currRow.getChildAt(j);
-                PlayerPiece p = game.getBoard()[j][i];
+                PlayerPiece p = replayGameBoard[j][i];
                 if (p == null) {
                     currView.setImageResource(android.R.color.transparent);
                 } else if (p instanceof Pawn) {

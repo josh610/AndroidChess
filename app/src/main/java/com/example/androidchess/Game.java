@@ -10,15 +10,13 @@ import java.util.Arrays;
 
 public class Game implements Serializable {
     private String name;
-    private LocalDateTime date;
+    private String date;
     private ArrayList<String> moves; //Records all moves in the game ("White D2->E4", "Black B1->G7 Queen", "White Resign")
     private String playerMove = "White's move";
 
 
     /** Getter/Setter Methods **/
 
-    public Game() {
-    }
 
     public void setMovesList(ArrayList<String> moves) { this.moves = moves; }
 
@@ -44,6 +42,7 @@ public class Game implements Serializable {
      */
     private PlayerPiece[][] board;
     public PlayerPiece[][] getBoard() { return board; }
+    public void setBoard(PlayerPiece[][] board) { this.board = board; }
 
     //0 for in progress, -1 for draw
     //1 for white win, 2 for black win
@@ -97,24 +96,38 @@ public class Game implements Serializable {
     public void setCurrPlayer(String player) { currPlayer = player; }
 
 
-    public Game(LocalDateTime now) {
-        date = now;
-    }
-    public void setDate(LocalDateTime now) {
-        date = now;
-    }
-    public String toString() {
-        if (name == null || date == null) {
-            return "";
-        }
+    public Game() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String dateFormat = "";
         try {
-            dateFormat = date.format(formatter);
+            dateFormat = LocalDateTime.now().format(formatter);
+            date = dateFormat;
         } catch (Exception e){
             e.printStackTrace();
         }
-        return name + ", " + dateFormat;
+
+    }
+    public void setDate(LocalDateTime now) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String dateFormat = "";
+        try {
+            dateFormat = now.format(formatter);
+            date = dateFormat;
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public String toString() {
+        if (name == null && date == null) {
+            return "";
+        } else if (name == null){
+            return "";
+        } else if (date == null) {
+            return name;
+        } else {
+            return name + ", " + date;
+        }
     }
     /**
      * Initializes the board (places pieces where they go for beginning of game)
@@ -230,19 +243,22 @@ public class Game implements Serializable {
                 move = intToMove(randPiece.getCoords()[0], randPiece.getCoords()[1], randMove[0], randMove[1], promotionChars[promotionInt]);
                 System.out.println(move);
                 return playerMove(currBoard, wCheckSpaces, bCheckSpaces, wKing, bKing, currPlayer, move);
+            } else {
+                move = intToMove(randPiece.getCoords()[0], randPiece.getCoords()[1], randMove[0], randMove[1], '0');
+                System.out.println(move);
+                return playerMove(currBoard, wCheckSpaces, bCheckSpaces, wKing, bKing, currPlayer, move);
             }
         } else {
             move = intToMove(randPiece.getCoords()[0], randPiece.getCoords()[1], randMove[0], randMove[1], '0');
             System.out.println(move);
             return playerMove(currBoard, wCheckSpaces, bCheckSpaces, wKing, bKing, currPlayer, move);
         }
-        return false;
     }
-    public void executeMove(String move) {
+    public void executeMove(PlayerPiece[][] board, String move) {
         if (move.equals("draw")) {
             setGameStatus(-1);
         } else {
-            currPlayer = move.substring(0, 4);
+            currPlayer = move.substring(0, 5);
         }
         String currMove = move.substring(6);
         if (currMove.equals("resign")) {

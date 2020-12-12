@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -48,6 +49,7 @@ public class SavedGames extends AppCompatActivity{
         setContentView(R.layout.activity_saved_games);
 
         //activate up arrow to Home
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         listView = (ListView) findViewById(R.id.previous_games_list);
@@ -59,6 +61,11 @@ public class SavedGames extends AppCompatActivity{
             jsonGames = extras.getString(SAVED_GAMES);
         }
         list = new Gson().fromJson(jsonGames, GameList.class);
+        try {
+            Home.writeApp(getApplicationContext(), list);
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         games = list.getGameList();
         listView = (ListView) findViewById(R.id.previous_games_list);
         if (games != null) {
@@ -74,7 +81,7 @@ public class SavedGames extends AppCompatActivity{
     private void goToReplay(int pos) {
         Game replayGame = games.get(pos);
         Intent intent = new Intent(this, ReplayGame.class);
-        intent.putExtra(CURRENT_GAME, new Gson().toJson(new Game(LocalDateTime.now())));
+        intent.putExtra(CURRENT_GAME, new Gson().toJson(replayGame));
         intent.putExtra(SAVED_GAMES, new Gson().toJson(list));
         startActivity(intent);
     }

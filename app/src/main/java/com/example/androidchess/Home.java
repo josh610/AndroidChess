@@ -45,13 +45,12 @@ public class Home extends AppCompatActivity implements Serializable{
 
         //read saved_games
         try {
-            saveState(getApplicationContext());
             readApp(getApplicationContext());
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
 
-        Game game = new Game(LocalDateTime.now());
+        Game game = new Game();
         game.setName("Game 1");
         game.setDate(LocalDateTime.now());
         saved_games.add(game);
@@ -63,7 +62,6 @@ public class Home extends AppCompatActivity implements Serializable{
             list = new Gson().fromJson(jsonGameList, GameList.class);
             saved_games = list.getGameList();
         }
-
 
         newGame = findViewById(R.id.new_game);
         savedGames = findViewById(R.id.saved_games);
@@ -85,7 +83,7 @@ public class Home extends AppCompatActivity implements Serializable{
     private void startNewGame() {
         //Create new Game and add it to bundle
         Intent intent = new Intent(this, Chess.class);
-        intent.putExtra(CURRENT_GAME, new Gson().toJson(new Game(LocalDateTime.now())));
+        intent.putExtra(CURRENT_GAME, new Gson().toJson(new Game()));
         intent.putExtra(SAVED_GAMES, new Gson().toJson(list));
         startActivity(intent);
     }
@@ -120,7 +118,7 @@ public class Home extends AppCompatActivity implements Serializable{
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    private static void writeApp(Context context, GameList list) throws IOException, ClassNotFoundException{
+    public static void writeApp(Context context, GameList list) throws IOException, ClassNotFoundException{
 
         FileOutputStream fos = context.openFileOutput("saved_games.dat", MODE_APPEND);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -136,11 +134,12 @@ public class Home extends AppCompatActivity implements Serializable{
      * @throws IOException
      * @throws ClassNotFoundException
      */
-    private static void readApp(Context context) throws IOException, ClassNotFoundException{
+    public static void readApp(Context context) throws IOException, ClassNotFoundException{
         FileInputStream fis = context.openFileInput("saved_games.dat");
         ObjectInputStream ois = new ObjectInputStream(fis);
 
         saved_games = (ArrayList<Game>) ois.readObject();
+        list.setGameList(saved_games);
         ois.close();
     }
 }

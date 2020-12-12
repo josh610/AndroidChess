@@ -76,12 +76,12 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="@color/brown_tile"
-                android:src="@drawable/black_king"/>
+                android:src="@drawable/black_queen"/>
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="@color/white_tile"
-                android:src="@drawable/black_queen"/>
+                android:src="@drawable/black_king"/>
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
@@ -362,12 +362,12 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="@color/white_tile"
-                android:src="@drawable/white_king"/>
+                android:src="@drawable/white_queen"/>
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="@color/brown_tile"
-                android:src="@drawable/white_queen"/>
+                android:src="@drawable/white_king"/>
             <ImageView
                 android:layout_width="40dp"
                 android:layout_height="40dp"

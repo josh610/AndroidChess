@@ -22,6 +22,7 @@ import com.example.androidchess.Game;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -94,6 +95,7 @@ public class Chess extends AppCompatActivity {
     }
 
     private void initializeGame() {
+        game.setDate(LocalDateTime.now());
         game.initBoard(currentGameBoard);
         game.setMovesList(currentGameMoves);
         prevPiece = null;
@@ -499,7 +501,11 @@ public class Chess extends AppCompatActivity {
                 }
                 dialog.dismiss();
                 returnToHome();
-                Home.saveState(getApplicationContext());
+                try {
+                    Home.writeApp(getApplicationContext(), list);
+                } catch (IOException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
         });
         AlertDialog dialog = builder.create();
@@ -511,6 +517,11 @@ public class Chess extends AppCompatActivity {
      */
     private void returnToHome(){
         System.out.println("Returning to home screen");
+        try {
+            Home.writeApp(getApplicationContext(), list);
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         //Clear back stack (?)
         Intent intent = new Intent(this, Home.class);
         intent.putExtra(SAVED_GAMES, new Gson().toJson(list));
