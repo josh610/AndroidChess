@@ -498,11 +498,8 @@ public class Chess extends AppCompatActivity {
                     Toast.makeText(Chess.this, "Please enter a game name", Toast.LENGTH_SHORT).show();
                 } else {
                     game.setName(gameName);
-                    gameList.add(game);
-                    if (!list.getGameList().contains(game)) {
-                        list.getGameList().add(game);
-                    }
-                    list.setGameList(gameList);
+                    //gameList.add(game);
+                    list.getGameList().add(game);
                     dialog.dismiss();
                     returnToHome();
                     try {
