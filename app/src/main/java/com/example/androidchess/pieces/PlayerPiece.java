@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * @author Fionna Zhang
  * @author Joshua Zimmerman
  */
-public abstract class PlayerPiece {
+public class PlayerPiece {
     /**
      * The coordinates of this piece
      */
@@ -44,7 +44,9 @@ public abstract class PlayerPiece {
     /**
      * Converts the piece to a String
      */
-    public abstract String toString();
+    public String toString() {
+        return "";
+    };
 
     /**
      * Gets a list of the valid moves for a given piece
@@ -93,7 +95,9 @@ public abstract class PlayerPiece {
      *
      * @return a BiFunction interface that gets the valid moves for a piece
      */
-    public abstract BiFunction<PlayerPiece, PlayerPiece[][], ArrayList<int[]>> getFunc();
+    public BiFunction<PlayerPiece, PlayerPiece[][], ArrayList<int[]>> getFunc() {
+        return null;
+    };
 
     /**
      * Gets the hasMoved field for this piece
