@@ -118,8 +118,8 @@ public class Home extends AppCompatActivity {
      * @throws ClassNotFoundException
      */
     public static void writeApp(Context context, GameList list) throws IOException, ClassNotFoundException{
-
-        FileOutputStream fos = context.openFileOutput("saved_games.dat", MODE_APPEND);
+        System.out.println(list.getGameList());
+        FileOutputStream fos = context.openFileOutput("saved_games.dat", MODE_PRIVATE);
         ObjectOutputStream oos = new ObjectOutputStream(fos);
 
         oos.writeObject(list);
@@ -138,6 +138,7 @@ public class Home extends AppCompatActivity {
         ObjectInputStream ois = new ObjectInputStream(fis);
 
         list = (GameList) ois.readObject();
+        System.out.println(list.getGameList());
         saved_games = list.getGameList();
         ois.close();
     }
